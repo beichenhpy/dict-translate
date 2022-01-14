@@ -11,6 +11,7 @@
 	<modules>
 		<module>dict-translate-core</module>
 		<module>dict-translate-starter</module>
+		<module>dict-translate-sample</module>
 	</modules>
 	<packaging>pom</packaging>
 	<groupId>cn.beichenhpy</groupId>
