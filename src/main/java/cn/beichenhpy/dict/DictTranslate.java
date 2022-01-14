@@ -1,4 +1,4 @@
-package cn.beichenhpy;
+package cn.beichenhpy.dict;
 
 /**
  * 字典翻译接口

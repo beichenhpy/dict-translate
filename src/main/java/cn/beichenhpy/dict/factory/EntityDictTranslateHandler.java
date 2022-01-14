@@ -1,8 +1,8 @@
-package cn.beichenhpy.factory;
+package cn.beichenhpy.dict.factory;
 
-import cn.beichenhpy.CommonSignature;
-import cn.beichenhpy.Dict;
-import cn.beichenhpy.enums.TranslateType;
+import cn.beichenhpy.dict.CommonSignature;
+import cn.beichenhpy.dict.Dict;
+import cn.beichenhpy.dict.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 

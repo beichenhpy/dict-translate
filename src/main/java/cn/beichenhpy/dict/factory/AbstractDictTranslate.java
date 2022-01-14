@@ -1,8 +1,8 @@
-package cn.beichenhpy.factory;
+package cn.beichenhpy.dict.factory;
 
-import cn.beichenhpy.Dict;
-import cn.beichenhpy.DictTranslate;
-import cn.beichenhpy.NeedRecursionTranslate;
+import cn.beichenhpy.dict.Dict;
+import cn.beichenhpy.dict.DictTranslate;
+import cn.beichenhpy.dict.NeedRecursionTranslate;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

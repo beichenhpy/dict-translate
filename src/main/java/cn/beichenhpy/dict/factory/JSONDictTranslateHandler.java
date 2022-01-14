@@ -1,7 +1,7 @@
-package cn.beichenhpy.factory;
+package cn.beichenhpy.dict.factory;
 
-import cn.beichenhpy.Dict;
-import cn.beichenhpy.enums.TranslateType;
+import cn.beichenhpy.dict.Dict;
+import cn.beichenhpy.dict.enums.TranslateType;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;

@@ -1,4 +1,7 @@
-package cn.beichenhpy.enums;
+package cn.beichenhpy.dict.enums;
+
+import cn.beichenhpy.dict.factory.EntityDictTranslateHandler;
+import cn.beichenhpy.dict.factory.JSONDictTranslateHandler;
 
 /**
  * 字典转换类型
@@ -11,13 +14,13 @@ package cn.beichenhpy.enums;
 public interface TranslateType {
     /**
      * JSON类型转换
-     * @see cn.beichenhpy.factory.EntityDictTranslateHandler
+     * @see EntityDictTranslateHandler
      */
     String JSON = "JSON";
 
     /**
      * ENTITY
-     * @see cn.beichenhpy.factory.JSONDictTranslateHandler
+     * @see JSONDictTranslateHandler
      */
     String ENTITY = "ENTITY";
 }

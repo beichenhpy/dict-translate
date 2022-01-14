@@ -1,8 +1,8 @@
 package cn.beichenhpy.modal;
 
-import cn.beichenhpy.Dict;
-import cn.beichenhpy.NeedRecursionTranslate;
-import cn.beichenhpy.enums.DictType;
+import cn.beichenhpy.dict.Dict;
+import cn.beichenhpy.dict.NeedRecursionTranslate;
+import cn.beichenhpy.dict.enums.DictType;
 
 /**
  * @author beichenhpy

@@ -1,4 +1,4 @@
-package cn.beichenhpy.enums;
+package cn.beichenhpy.dict.enums;
 
 import lombok.Getter;
 

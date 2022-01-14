@@ -1,4 +1,4 @@
-package cn.beichenhpy;
+package cn.beichenhpy.dict;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

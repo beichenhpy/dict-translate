@@ -1,6 +1,6 @@
-package cn.beichenhpy;
+package cn.beichenhpy.dict;
 
-import cn.beichenhpy.enums.TranslateType;
+import cn.beichenhpy.dict.enums.TranslateType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

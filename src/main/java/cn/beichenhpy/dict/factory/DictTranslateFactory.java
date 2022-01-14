@@ -1,11 +1,9 @@
-package cn.beichenhpy.factory;
+package cn.beichenhpy.dict.factory;
 
 
-import cn.beichenhpy.DictTranslate;
+import cn.beichenhpy.dict.DictTranslate;
 
 import java.util.Map;
-
-import static cn.beichenhpy.factory.AbstractDictTranslate.TRANSLATE_HANDLERS;
 
 
 /**
@@ -19,7 +17,7 @@ import static cn.beichenhpy.factory.AbstractDictTranslate.TRANSLATE_HANDLERS;
 public class DictTranslateFactory {
 
     public DictTranslate getHandler(String type) {
-        for (Map.Entry<String, DictTranslate> entry : TRANSLATE_HANDLERS.entrySet()) {
+        for (Map.Entry<String, DictTranslate> entry : AbstractDictTranslate.TRANSLATE_HANDLERS.entrySet()) {
             if (entry.getKey().equals(type)) {
                 return entry.getValue();
             }

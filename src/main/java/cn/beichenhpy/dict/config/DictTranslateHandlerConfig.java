@@ -1,10 +1,10 @@
-package cn.beichenhpy.config;
+package cn.beichenhpy.dict.config;
 
-import cn.beichenhpy.DictAspect;
-import cn.beichenhpy.DictTranslate;
-import cn.beichenhpy.factory.DictTranslateFactory;
-import cn.beichenhpy.factory.EntityDictTranslateHandler;
-import cn.beichenhpy.factory.JSONDictTranslateHandler;
+import cn.beichenhpy.dict.DictAspect;
+import cn.beichenhpy.dict.DictTranslate;
+import cn.beichenhpy.dict.factory.DictTranslateFactory;
+import cn.beichenhpy.dict.factory.EntityDictTranslateHandler;
+import cn.beichenhpy.dict.factory.JSONDictTranslateHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

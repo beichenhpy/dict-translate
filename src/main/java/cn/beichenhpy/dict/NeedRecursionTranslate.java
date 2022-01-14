@@ -1,4 +1,4 @@
-package cn.beichenhpy;
+package cn.beichenhpy.dict;
 
 /**
  * 需要进行递归翻译的实体类，需要翻译则要继承此类

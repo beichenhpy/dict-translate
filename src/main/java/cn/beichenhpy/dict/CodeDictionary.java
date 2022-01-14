@@ -1,4 +1,4 @@
-package cn.beichenhpy;
+package cn.beichenhpy.dict;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;

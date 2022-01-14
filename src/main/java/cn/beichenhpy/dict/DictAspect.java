@@ -1,7 +1,7 @@
-package cn.beichenhpy;
+package cn.beichenhpy.dict;
 
 
-import cn.beichenhpy.factory.DictTranslateFactory;
+import cn.beichenhpy.dict.factory.DictTranslateFactory;
 import cn.hutool.core.convert.Convert;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -31,7 +31,7 @@ public class DictAspect {
     private DictTranslateFactory dictTranslateFactory;
 
     //切点,需要根据注解位置来修改
-    @Pointcut(value = "@annotation(cn.beichenhpy.EnableDictTranslate)")
+    @Pointcut(value = "@annotation(cn.beichenhpy.dict.EnableDictTranslate)")
     public void pointCut() {
 
     }
