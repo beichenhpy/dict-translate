@@ -4,6 +4,7 @@ import cn.beichenhpy.sample.entity.Student;
 import cn.beichenhpy.sample.service.FooService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import java.util.Set;
  * @since 0.0.1
  * <p> 2022/1/14 19:16
  */
+@Slf4j
 @RestController
 public class FooController {
     @Resource
@@ -93,6 +95,15 @@ public class FooController {
     public ResponseEntity<JSONObject> test10() {
         JSONObject s = fooService.test10();
         return ResponseEntity.ok(s);
+    }
+
+    //10_000_000 数据翻译 20s以上 需要优化
+    @GetMapping("/test11")
+    public void test11() {
+        List<Student> students = fooService.bigData();
+        log.info("处理完成：{}",students.size());
+        Student student = students.get(0);
+        log.info("student:{}", student);
     }
 
 }
