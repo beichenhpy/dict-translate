@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
  * 在哪个方法启用翻译
  * <pre>
  *     <t>@EnableDictTranslate</t>(type = TranslateType.ENTITY)
- *     public IPage<Student> test() {
- *         IPage<Student> page = new Page<>();
+ *     public IPage&lt;Student&gt; test() {
+ *         IPage&lt;Student&gt; page = new Page<>();
  *         page.setRecords(prepare());
  *         return page;
  *     }
