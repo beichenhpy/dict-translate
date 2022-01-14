@@ -7,7 +7,6 @@
 		<groupId>cn.beichenhpy</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>cn.beichenhpy</groupId>
 	<artifactId>dict-translate-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dict-translate-core</name>
