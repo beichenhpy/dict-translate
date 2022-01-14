@@ -20,19 +20,19 @@ public @interface LocalSignature {
      * 本地枚举类 Object不处理
      * @return 返回枚举类
      */
-    Class<?> localClass() default Object.class;
+    Class<?> type() default Object.class;
 
     /**
      * LOCAL类型时处理
      * 本地枚举类对应获取value值的方法
      * @return 返回方法名
      */
-    String localMethod() default "";
+    String method() default "";
 
     /**
      * LOCAL类型时处理
      * 枚举方法的参数类型 默认String
      * @return 枚举方法的参数类型
      */
-    Class<?> localMethodParameterType() default String.class;
+    Class<?> arg() default String.class;
 }

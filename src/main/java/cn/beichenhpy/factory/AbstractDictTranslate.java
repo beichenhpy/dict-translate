@@ -210,29 +210,29 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected void doLocalTrans(Dict annotation, String ref, Object key, Object record) {
         LocalSignature enumSignature = annotation.localSignature();
         //本地字典表
-        Class<?> enumClass = enumSignature.localClass();
+        Class<?> enumClass = enumSignature.type();
         //不为默认Object则进行转换
         if (!enumClass.equals(Object.class)) {
-            String methodName = enumSignature.localMethod();
+            String methodName = enumSignature.method();
             if (methodName.isEmpty()) {
-                throw new IllegalArgumentException("字典转换失败：未传入[localMethod]");
+                throw new IllegalArgumentException("字典转换失败：未传入[method]");
             }
-            Class<?> parameterType = enumSignature.localMethodParameterType();
+            Class<?> parameterType = enumSignature.arg();
             Method translateMethod = ReflectUtil.getMethod(enumClass, methodName, parameterType);
             if (translateMethod == null) {
-                throw new IllegalArgumentException("字典转换失败：检查传入的[localMethod]是否存在");
+                throw new IllegalArgumentException("字典转换失败：检查传入的[method]是否存在");
             }
             //判断是否为静态方法
             int modifiers = translateMethod.getModifiers();
             boolean isStatic = Modifier.isStatic(modifiers);
             if (!isStatic) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[localMethod]方法，必须为静态方法");
+                throw new IllegalArgumentException("字典转换失败：请注意传入的[method]方法，必须为静态方法");
             }
             try {
                 Object translateValue = translateMethod.invoke(null, key);
                 ReflectUtil.setFieldValue(record, ref, translateValue);
             } catch (Exception e) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[localMethodParameterType]类型是否正确");
+                throw new IllegalArgumentException("字典转换失败：请注意传入的[arg]类型是否正确");
             }
         }
     }
