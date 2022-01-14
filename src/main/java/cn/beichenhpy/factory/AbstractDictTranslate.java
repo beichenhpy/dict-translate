@@ -1,13 +1,13 @@
 package cn.beichenhpy.factory;
 
-import cn.beichenhpy.*;
-import cn.hutool.core.util.ObjectUtil;
+import cn.beichenhpy.Dict;
+import cn.beichenhpy.DictTranslate;
+import cn.beichenhpy.NeedRecursionTranslate;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,12 +36,39 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected abstract void add();
 
-
+    /**
+     * 处理SIMPLE类型的翻译
+     * @param current 当前对象值
+     * @param field 字段
+     * @param fieldValue 当前字段值
+     * @param ref 赋值字段
+     * @param dict 注解
+     * @throws Exception 异常
+     */
     protected abstract void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
+    /**
+     * 处理COMMON类型的翻译
+     * @param current 当前对象值
+     * @param field 字段
+     * @param fieldValue 当前字段值
+     * @param ref 赋值字段
+     * @param dict 注解
+     * @throws Exception 异常
+     */
     protected abstract void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
+    /**
+     * 处理DB类型的翻译
+     * @param current 当前对象值
+     * @param field 字段
+     * @param fieldValue 当前字段值
+     * @param ref 赋值字段
+     * @param dict 注解
+     * @throws Exception 异常
+     */
     protected abstract void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
+
 
     @Override
     public Object dictTranslate(Object result) throws Exception {
@@ -81,7 +108,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     }
 
     /**
-     * ######################################################ENTITY##############################################################
+     *
      * 翻译入口
      *
      * @param record 翻译实体

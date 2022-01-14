@@ -5,7 +5,6 @@ import cn.beichenhpy.Dict;
 import cn.beichenhpy.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import lombok.SneakyThrows;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;

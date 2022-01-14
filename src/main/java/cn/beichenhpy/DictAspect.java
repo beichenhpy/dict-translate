@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 /**
  * @author han.pengyu
- * 字典翻译切面，已完成简单翻译和本地枚举类翻译
+ * 字典翻译切面
  * @see DictTranslate
  * @see DictTranslateFactory
  * @since 1.0.0

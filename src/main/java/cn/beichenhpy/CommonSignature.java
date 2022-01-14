@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * COMMON情况，方法签名
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1

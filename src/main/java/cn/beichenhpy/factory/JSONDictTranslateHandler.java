@@ -2,7 +2,6 @@ package cn.beichenhpy.factory;
 
 import cn.beichenhpy.Dict;
 import cn.beichenhpy.enums.TranslateType;
-import lombok.SneakyThrows;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;

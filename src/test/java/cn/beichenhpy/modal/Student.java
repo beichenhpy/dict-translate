@@ -12,7 +12,7 @@ import cn.beichenhpy.enums.DictType;
  */
 public class Student implements NeedRecursionTranslate {
 
-    @Dict(dictType = DictType.LOCAL, ref = "genderDict")
+    @Dict(dictType = DictType.COMMON, ref = "genderDict")
     private Boolean gender;
 
     private String genderDict;
