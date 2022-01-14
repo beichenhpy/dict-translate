@@ -65,11 +65,11 @@ import java.lang.annotation.Target;
  *      private String status;
  * </pre>
  * <p>所有需要<t>翻译</t>的实体类，都需要继承<t>NeedTranslate</t>
- * @author han.pengyu
+ * @author beichenhpy
  * @see DictTranslate#dictTranslate(Object)
  * @see NeedRecursionTranslate
- * @since 1.0.0
- * @version 1.0.1
+ * @since o.0.1
+ * @version 0.9.1
  * <p> 2021/9/2 13:15
  */
 @Target(ElementType.FIELD)

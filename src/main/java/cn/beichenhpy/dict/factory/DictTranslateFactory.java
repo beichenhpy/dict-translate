@@ -8,10 +8,10 @@ import java.util.Map;
 
 /**
  * 字典翻译处理器工厂
- * @author han.pengyu
- * @version 1.0.0
+ * @author beichenhpy
+ * @version 0.0.1
  * <p> 2022/1/13 14:47
- * @since 1.0.0
+ * @since 0.0.1
  */
 
 public class DictTranslateFactory {

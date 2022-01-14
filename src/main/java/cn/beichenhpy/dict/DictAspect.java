@@ -15,12 +15,12 @@ import javax.annotation.Resource;
 import java.lang.reflect.Method;
 
 /**
- * @author han.pengyu
+ * @author beichenhpy
  * 字典翻译切面
  * @see DictTranslate
  * @see DictTranslateFactory
- * @since 1.0.0
- * @version 1.0.1
+ * @since 0.0.1
+ * @version 0.0.1
  * <p> 2022/1/12 10:42
  */
 @Aspect

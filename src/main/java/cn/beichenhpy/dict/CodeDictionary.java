@@ -7,9 +7,9 @@ import java.util.*;
 
 /**
  * 字典类
- * @author han.pengyu
- * @version 1.0.1
- * @since 1.0.0
+ * @author beichenhpy
+ * @version 0.0.1
+ * @since 0.0.1
  * <p> 2022/1/13 8:43
  */
 @Data

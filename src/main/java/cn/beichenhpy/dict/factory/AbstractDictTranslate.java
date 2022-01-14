@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
  * 翻译抽象接口，主要提供一些方法
  * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #add()} 和 {@link #dictTranslate(Object)} 即可
  *
- * @author han.pengyu
- * @version 1.0.0
+ * @author beichenhpy
+ * @version 0.0.1
  * <p> 2022/1/13 13:33
  * @see EntityDictTranslateHandler
  * @see JSONDictTranslateHandler
- * @since 1.0.0
+ * @since 0.0.1
  */
 @Slf4j
 public abstract class AbstractDictTranslate implements DictTranslate {
