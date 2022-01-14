@@ -95,6 +95,10 @@ public @interface Dict {
      */
     String dictTableType() default "";
 
-
+    /**
+     * LOCAL模式
+     * <p>本地翻译 注解信息
+     * @return 返回本地翻译需要的注解信息
+     */
     LocalSignature localSignature() default @LocalSignature;
 }
