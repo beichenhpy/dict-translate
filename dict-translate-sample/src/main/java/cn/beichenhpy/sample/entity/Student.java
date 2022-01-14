@@ -4,6 +4,7 @@ import cn.beichenhpy.dictionary.CommonSignature;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.NeedRecursionTranslate;
 import cn.beichenhpy.dictionary.enums.DictType;
+import cn.beichenhpy.sample.service.FooService;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -31,6 +32,12 @@ public class Student implements NeedRecursionTranslate {
     private Long status;
 
     private String statusDict;
+
+    @Dict(dictType = DictType.COMMON, ref = "healthText",
+            commonSignature = @CommonSignature(type = FooService.class, method = "getValue", arg = String.class))
+    private String health;
+
+    private String healthText;
 
     private List<Teacher> teachers;
 

@@ -92,8 +92,21 @@ public class FooService {
         map.put("1", "1");
         Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).homes(Collections.singletonList(Collections.singletonList(Home.builder().address("测试").build()))).build();
         Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).localDateTimes(Collections.singletonList(LocalDateTime.now())).build();
-        Student student = Student.builder().gender(false).status(10041001L).date(new Date()).dates(Collections.singletonList(new Date())).test(map).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
-        Student student1 = Student.builder().gender(true).status(10041002L).date(new Date()).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
+        Student student = Student.builder().health("10011002").gender(false).status(10041001L).date(new Date()).dates(Collections.singletonList(new Date())).test(map).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
+        Student student1 = Student.builder().health("10011005").gender(true).status(10041002L).date(new Date()).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
         return new ArrayList<>(Arrays.asList(student, student1));
+    }
+
+    public String getValue(String key){
+        switch (key) {
+            case "10011001":
+                return "健康";
+            case "10011002":
+                return "良好";
+            case "10011003":
+                return "较差";
+            default:
+                return key + ":字典不存在";
+        }
     }
 }

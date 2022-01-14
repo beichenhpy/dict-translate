@@ -131,8 +131,8 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
             //判断是否为静态方法
             int modifiers = translateMethod.getModifiers();
             boolean isStatic = Modifier.isStatic(modifiers);
-            if (!isStatic) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[method]方法，必须为静态方法");
+            if (clazz.isEnum() && !isStatic){
+                throw new IllegalArgumentException("字典转换失败: 传入type为枚举类时，必须传入静态方法method!");
             }
             boolean isSameClazz = checkFieldClassSameAsAnno(fieldValue, parameterType);
             if (!isSameClazz){
@@ -140,10 +140,14 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                         "字段类型为:" + fieldValue.getClass() + "注解参数类型为:" + parameterType);
             }
             try {
-                Object translateValue = translateMethod.invoke(null, fieldValue);
+                Object instance = null;
+                if (!isStatic){
+                    instance = ReflectUtil.newInstance(clazz);
+                }
+                Object translateValue = ReflectUtil.invoke(instance, translateMethod, fieldValue);
                 ReflectUtil.setFieldValue(current, ref, translateValue);
             } catch (Exception e) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[arg]类型是否正确");
+                throw new IllegalArgumentException("字典转换失败：请注意传入的[arg]类型是否正确",e);
             }
         }
     }
