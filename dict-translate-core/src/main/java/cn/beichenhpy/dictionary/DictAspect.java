@@ -44,8 +44,8 @@ public class DictAspect {
         if (enableDictTranslate == null) {
             throw new Exception("NoSuchMethodException: 目标方法不存在");
         }
-        String type = enableDictTranslate.type();
-        DictTranslate handler = dictTranslateFactory.getHandler(type);
+        String mode = enableDictTranslate.mode();
+        DictTranslate handler = dictTranslateFactory.getHandler(mode);
         if (handler == null){
             throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
         }

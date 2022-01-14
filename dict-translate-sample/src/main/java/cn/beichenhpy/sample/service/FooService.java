@@ -22,7 +22,7 @@ import java.util.*;
  */
 @Service
 public class FooService {
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public IPage<Student> test() {
         IPage<Student> page = new Page<>();
         page.setRecords(prepare());
@@ -30,18 +30,18 @@ public class FooService {
     }
 
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public List<Student> test1() {
         return prepare();
     }
 
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public Set<Student> test3() {
         return new HashSet<>(prepare());
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public Student test2() {
         Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).build();
         Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).build();
@@ -49,39 +49,39 @@ public class FooService {
     }
 
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public List<String> test4() {
         return new ArrayList<>(Collections.singletonList("1"));
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public Map<String, String> test5() {
         Map<String, String> map = new HashMap<>();
         map.put("1", "1");
         return map;
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public Integer test6() {
         return 1;
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public String test7() {
         return "1";
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public Date test8() {
         return new Date();
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public LocalDateTime test9() {
         return LocalDateTime.now();
     }
 
-    @EnableDictTranslate(type = TranslateType.ENTITY)
+    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public JSONObject test10(){
         String a = "{\"a\":\"a\"}";
         return JSON.parseObject(a);
