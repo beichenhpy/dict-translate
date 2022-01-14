@@ -88,7 +88,11 @@ public @interface Dict {
      */
     String ref();
 
-
+    /**
+     * SIMPLE类型时的拓展
+     * @return simple类型拓展
+     */
+    SimplePlugin simplePlugin() default @SimplePlugin;
     /**
      * TABLE类型时 字典对应type值
      * @return type

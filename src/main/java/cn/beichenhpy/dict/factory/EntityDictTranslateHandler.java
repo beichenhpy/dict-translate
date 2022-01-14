@@ -2,6 +2,7 @@ package cn.beichenhpy.dict.factory;
 
 import cn.beichenhpy.dict.CommonSignature;
 import cn.beichenhpy.dict.Dict;
+import cn.beichenhpy.dict.SimplePlugin;
 import cn.beichenhpy.dict.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -30,23 +31,41 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
     @Override
     protected void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
+        SimplePlugin simplePlugin = dict.simplePlugin();
+        boolean revert = simplePlugin.isRevert();
         if (fieldValue instanceof Boolean) {
             if (!ObjectUtil.isEmpty(fieldValue)) {
                 if (Boolean.TRUE.toString().equals(fieldValue.toString())) {
-                    ReflectUtil.setFieldValue(current, ref, "是");
+                    if (!revert){
+                        ReflectUtil.setFieldValue(current, ref, "是");
+                    }else {
+                        ReflectUtil.setFieldValue(current, ref, "否");
+                    }
                 }
                 if (Boolean.FALSE.toString().equals(fieldValue.toString())) {
-                    ReflectUtil.setFieldValue(current, ref, "否");
+                    if (!revert){
+                        ReflectUtil.setFieldValue(current, ref, "否");
+                    }else {
+                        ReflectUtil.setFieldValue(current, ref, "是");
+                    }
                 }
             }
         }
         if (fieldValue instanceof Integer) {
             if (!ObjectUtil.isEmpty(fieldValue)) {
                 if ("1".equals(fieldValue.toString())) {
-                    ReflectUtil.setFieldValue(current, ref, "是");
+                    if (!revert){
+                        ReflectUtil.setFieldValue(current, ref, "是");
+                    }else {
+                        ReflectUtil.setFieldValue(current, ref, "否");
+                    }
                 }
                 if ("0".equals(fieldValue.toString())) {
-                    ReflectUtil.setFieldValue(current, ref, "是");
+                    if (!revert){
+                        ReflectUtil.setFieldValue(current, ref, "否");
+                    }else {
+                        ReflectUtil.setFieldValue(current, ref, "是");
+                    }
                 }
             }
         }
