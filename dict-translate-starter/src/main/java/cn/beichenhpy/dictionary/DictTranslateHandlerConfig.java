@@ -2,7 +2,6 @@ package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.factory.DictTranslateFactory;
 import cn.beichenhpy.dictionary.factory.EntityDictTranslateHandler;
-import cn.beichenhpy.dictionary.factory.JSONDictTranslateHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,10 +18,6 @@ public class DictTranslateHandlerConfig {
         return new EntityDictTranslateHandler();
     }
 
-    @Bean
-    public DictTranslate jsonTranslate() {
-        return new JSONDictTranslateHandler();
-    }
 
     @Bean
     public DictTranslateFactory dictTranslateFactory() {

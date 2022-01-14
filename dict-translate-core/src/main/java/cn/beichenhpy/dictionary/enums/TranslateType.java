@@ -12,7 +12,5 @@ package cn.beichenhpy.dictionary.enums;
  */
 public interface TranslateType {
 
-    String JSON = "JSON";
-
     String ENTITY = "ENTITY";
 }
