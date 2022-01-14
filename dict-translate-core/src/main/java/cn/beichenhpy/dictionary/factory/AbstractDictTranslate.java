@@ -3,11 +3,13 @@ package cn.beichenhpy.dictionary.factory;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.DictTranslate;
 import cn.beichenhpy.dictionary.NeedRecursionTranslate;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractDictTranslate implements DictTranslate {
 
     //构造函数默认调用子类实现的add方法，将自身注册到TRANSLATE_HANDLERS中
-    public AbstractDictTranslate(){
+    public AbstractDictTranslate() {
         registerHandler();
     }
 
@@ -45,33 +47,36 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     /**
      * 处理SIMPLE类型的翻译
-     * @param current 当前对象值
-     * @param field 字段
+     *
+     * @param current    当前对象值
+     * @param field      字段
      * @param fieldValue 当前字段值
-     * @param ref 赋值字段
-     * @param dict 注解
+     * @param ref        赋值字段
+     * @param dict       注解
      * @throws Exception 异常
      */
     protected abstract void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
     /**
      * 处理COMMON类型的翻译
-     * @param current 当前对象值
-     * @param field 字段
+     *
+     * @param current    当前对象值
+     * @param field      字段
      * @param fieldValue 当前字段值
-     * @param ref 赋值字段
-     * @param dict 注解
+     * @param ref        赋值字段
+     * @param dict       注解
      * @throws Exception 异常
      */
     protected abstract void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
     /**
      * 处理DB类型的翻译
-     * @param current 当前对象值
-     * @param field 字段
+     *
+     * @param current    当前对象值
+     * @param field      字段
      * @param fieldValue 当前字段值
-     * @param ref 赋值字段
-     * @param dict 注解
+     * @param ref        赋值字段
+     * @param dict       注解
      * @throws Exception 异常
      */
     protected abstract void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
@@ -79,8 +84,21 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     @Override
     public Object dictTranslate(Object result) throws Exception {
-        handleTranslate(result);
+        if (!ClassUtil.isBasicType(result.getClass()) && !String.class.equals(result.getClass())){
+            handleTranslate(result);
+        }
         return result;
+    }
+
+    /**
+     * 检查注解上的类是否和字段值得一致
+     *
+     * @param fieldValue 字段值
+     * @param arg        注解参数类型
+     * @return 是 true 否 false
+     */
+    protected boolean checkFieldClassSameAsAnno(Object fieldValue, Class<?> arg) {
+        return arg.equals(fieldValue.getClass());
     }
 
     /**
@@ -95,27 +113,28 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     /**
      * 获取所有非static变量
+     *
      * @param record 实体
      * @return 返回字段数组
      */
-    protected List<Field> getNonStaticFiled(Object record) {
+    protected List<Field> getAvailableFields(Object record) {
         Class<?> clazz = record.getClass();
         List<Field> fields = CLASS_NON_STATIC_FILED_CACHE.get(clazz);
         if (fields != null) {
             return fields;
         }
         Field[] allFields = ReflectUtil.getFields(clazz);
-        List<Field> noStaticFields = Arrays.stream(allFields)
+        List<Field> noAvailableFields = Arrays.stream(allFields)
                 .parallel()
                 .filter(Objects::nonNull)
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .filter(field -> !Modifier.isTransient(field.getModifiers()))
                 .collect(Collectors.toList());
-        CLASS_NON_STATIC_FILED_CACHE.put(clazz, noStaticFields);
-        return noStaticFields;
+        CLASS_NON_STATIC_FILED_CACHE.put(clazz, noAvailableFields);
+        return noAvailableFields;
     }
 
     /**
-     *
      * 翻译入口
      *
      * @param record 翻译实体
@@ -128,45 +147,51 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                     handleTranslate(o);
                 }
             }
-        }
-        //添加类缓存
-        List<Field> fields = getNonStaticFiled(record);
-        for (Field field : fields) {
-            //是否为基本类
-            field.setAccessible(true);
-            //对象key
-            Object key = ReflectUtil.getFieldValue(record, field.getName());
-            //key的值不存在，则跳过循环
-            if (key == null) {
-                continue;
-            }
-            //是否为Collection
-            if (key instanceof Collection) {
-                for (Object o : ((Collection<?>) key)) {
-                    if (checkNeedTranslate(o)) {
-                        handleTranslate(o);
+        } else {
+            //添加类缓存
+            List<Field> fields = getAvailableFields(record);
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);
+                }catch (InaccessibleObjectException e){
+                    log.error("由于{}的原因，该类型{}无法进行翻译，请检查你的注解是否标记正确",e.getMessage(), field.getType());
+                    return;
+                }
+                //对象key
+                Object key = ReflectUtil.getFieldValue(record, field.getName());
+                //key的值不存在，则跳过循环
+                if (key == null) {
+                    continue;
+                }
+                //是否为Collection
+                if (key instanceof Collection) {
+                    for (Object o : ((Collection<?>) key)) {
+                        if (checkNeedTranslate(o)) {
+                            handleTranslate(o);
+                        }
                     }
                 }
-            }
-            Dict annotation = field.getAnnotation(Dict.class);
-            if (annotation == null) {
-                continue;
-            }
-            String ref = annotation.ref();
-            switch (annotation.dictType()) {
-                case SIMPLE:
-                    doSimpleTranslate(record, field, key, ref, annotation);
-                    break;
-                case COMMON:
-                    doCommonTranslate(record, field, key, ref, annotation);
-                    break;
-                case DB:
-                    doDbTranslate(record, field, key, ref, annotation);
-                    break;
-                default:
-                    break;
+                Dict annotation = field.getAnnotation(Dict.class);
+                if (annotation == null) {
+                    continue;
+                }
+                String ref = annotation.ref();
+                switch (annotation.dictType()) {
+                    case SIMPLE:
+                        doSimpleTranslate(record, field, key, ref, annotation);
+                        break;
+                    case COMMON:
+                        doCommonTranslate(record, field, key, ref, annotation);
+                        break;
+                    case DB:
+                        doDbTranslate(record, field, key, ref, annotation);
+                        break;
+                    default:
+                        break;
 
+                }
             }
         }
+
     }
 }

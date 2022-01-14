@@ -123,7 +123,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
             if (methodName.isEmpty()) {
                 throw new IllegalArgumentException("字典转换失败：未传入[method]");
             }
-            Class<?>[] parameterType = commonSignature.args();
+            Class<?> parameterType = commonSignature.arg();
             Method translateMethod = ReflectUtil.getMethod(clazz, methodName, parameterType);
             if (translateMethod == null) {
                 throw new IllegalArgumentException("字典转换失败：检查传入的[method]是否存在");
@@ -133,6 +133,11 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
             boolean isStatic = Modifier.isStatic(modifiers);
             if (!isStatic) {
                 throw new IllegalArgumentException("字典转换失败：请注意传入的[method]方法，必须为静态方法");
+            }
+            boolean isSameClazz = checkFieldClassSameAsAnno(fieldValue, parameterType);
+            if (!isSameClazz){
+                throw new IllegalArgumentException("字典转换失败：检查字段与注解arg参数是否一致，" +
+                        "字段类型为:" + fieldValue.getClass() + "注解参数类型为:" + parameterType);
             }
             try {
                 Object translateValue = translateMethod.invoke(null, fieldValue);

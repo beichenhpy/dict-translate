@@ -31,7 +31,7 @@ public class DictAspect {
     private DictTranslateFactory dictTranslateFactory;
 
     //切点,需要根据注解位置来修改
-    @Pointcut(value = "@annotation(cn.beichenhpy.dict.EnableDictTranslate)")
+    @Pointcut(value = "@annotation(cn.beichenhpy.dictionary.EnableDictTranslate)")
     public void pointCut() {
 
     }

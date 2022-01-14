@@ -35,5 +35,5 @@ public @interface CommonSignature {
      * 枚举方法的参数类型 默认String
      * @return 枚举方法的参数类型
      */
-    Class<?>[] args() default {};
+    Class<?> arg() default String.class;
 }
