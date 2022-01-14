@@ -1,9 +1,7 @@
 package cn.beichenhpy.factory;
 
-import cn.beichenhpy.CodeDictionary;
-import cn.beichenhpy.Dict;
-import cn.beichenhpy.DictTranslate;
-import cn.beichenhpy.NeedRecursionTranslate;
+import cn.beichenhpy.*;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -124,7 +122,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                     doSimpleTrans(key, record, ref);
                     break;
                 case LOCAL:
-                    doLocalEnumTrans(annotation, ref, key, record);
+                    doLocalTrans(annotation, ref, key, record);
                     break;
                 case TABLE:
                     doTableTrans(record, ref, annotation, key);
@@ -147,7 +145,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected void doSimpleTrans(Object key, Object record, String ref) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
         if (key instanceof Boolean) {
-            if (!StringUtils.isEmpty(key)) {
+            if (!ObjectUtil.isEmpty(key)) {
                 if (Boolean.TRUE.toString().equals(key.toString())) {
                     ReflectUtil.setFieldValue(record, ref, "是");
                 }
@@ -157,7 +155,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
             }
         }
         if (key instanceof Integer) {
-            if (!StringUtils.isEmpty(key)) {
+            if (!ObjectUtil.isEmpty(key)) {
                 if ("1".equals(key.toString())) {
                     ReflectUtil.setFieldValue(record, ref, "是");
                 }
@@ -209,31 +207,32 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param record     翻译实体
      */
     @SneakyThrows
-    protected void doLocalEnumTrans(Dict annotation, String ref, Object key, Object record) {
+    protected void doLocalTrans(Dict annotation, String ref, Object key, Object record) {
+        LocalSignature enumSignature = annotation.localSignature();
         //本地字典表
-        Class<?> enumClass = annotation.localEnumClass();
+        Class<?> enumClass = enumSignature.localClass();
         //不为默认Object则进行转换
         if (!enumClass.equals(Object.class)) {
-            String methodName = annotation.localEnumMethod();
+            String methodName = enumSignature.localMethod();
             if (methodName.isEmpty()) {
-                throw new IllegalArgumentException("字典转换失败：未传入[localEnumMethod]");
+                throw new IllegalArgumentException("字典转换失败：未传入[localMethod]");
             }
-            Class<?> parameterType = annotation.localEnumMethodParameterType();
+            Class<?> parameterType = enumSignature.localMethodParameterType();
             Method translateMethod = ReflectUtil.getMethod(enumClass, methodName, parameterType);
             if (translateMethod == null) {
-                throw new IllegalArgumentException("字典转换失败：检查传入的[localEnumMethod]是否存在");
+                throw new IllegalArgumentException("字典转换失败：检查传入的[localMethod]是否存在");
             }
             //判断是否为静态方法
             int modifiers = translateMethod.getModifiers();
             boolean isStatic = Modifier.isStatic(modifiers);
             if (!isStatic) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[localEnumMethod]方法，必须为静态方法");
+                throw new IllegalArgumentException("字典转换失败：请注意传入的[localMethod]方法，必须为静态方法");
             }
             try {
                 Object translateValue = translateMethod.invoke(null, key);
                 ReflectUtil.setFieldValue(record, ref, translateValue);
             } catch (Exception e) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[localEnumMethodParameterType]类型是否正确");
+                throw new IllegalArgumentException("字典转换失败：请注意传入的[localMethodParameterType]类型是否正确");
             }
         }
     }
