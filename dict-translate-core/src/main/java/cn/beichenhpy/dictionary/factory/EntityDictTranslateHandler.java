@@ -3,6 +3,7 @@ package cn.beichenhpy.dictionary.factory;
 import cn.beichenhpy.dictionary.CommonSignature;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.SimplePlugin;
+import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -33,36 +34,36 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
         boolean revert = simplePlugin.isRevert();
         if (fieldValue instanceof Boolean) {
             if (!ObjectUtil.isEmpty(fieldValue)) {
-                if (Boolean.TRUE.toString().equals(fieldValue.toString())) {
+                if (fieldValue.toString().equals(TranslateConstant.LOWER_TRUE)) {
                     if (!revert){
-                        ReflectUtil.setFieldValue(current, ref, "是");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
                     }else {
-                        ReflectUtil.setFieldValue(current, ref, "否");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
                     }
                 }
-                if (Boolean.FALSE.toString().equals(fieldValue.toString())) {
+                if (fieldValue.toString().equals(TranslateConstant.LOWER_FALSE)) {
                     if (!revert){
-                        ReflectUtil.setFieldValue(current, ref, "否");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
                     }else {
-                        ReflectUtil.setFieldValue(current, ref, "是");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
                     }
                 }
             }
         }
         if (fieldValue instanceof Integer) {
             if (!ObjectUtil.isEmpty(fieldValue)) {
-                if ("1".equals(fieldValue.toString())) {
+                if (fieldValue.toString().equals(TranslateConstant.ONE)) {
                     if (!revert){
-                        ReflectUtil.setFieldValue(current, ref, "是");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
                     }else {
-                        ReflectUtil.setFieldValue(current, ref, "否");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
                     }
                 }
-                if ("0".equals(fieldValue.toString())) {
+                if (fieldValue.toString().equals(TranslateConstant.ZERO)) {
                     if (!revert){
-                        ReflectUtil.setFieldValue(current, ref, "否");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
                     }else {
-                        ReflectUtil.setFieldValue(current, ref, "是");
+                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
                     }
                 }
             }
