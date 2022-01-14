@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
-public @interface LocalSignature {
+public @interface CommonSignature {
     /**
      * LOCAL类型时处理
      * 本地枚举类 Object不处理
@@ -34,5 +34,5 @@ public @interface LocalSignature {
      * 枚举方法的参数类型 默认String
      * @return 枚举方法的参数类型
      */
-    Class<?> arg() default String.class;
+    Class<?>[] args() default {};
 }

@@ -93,12 +93,12 @@ public @interface Dict {
      * TABLE类型时 字典对应type值
      * @return type
      */
-    String dictTableType() default "";
+    DbSignature dbSignature() default @DbSignature;
 
     /**
-     * LOCAL模式
-     * <p>本地翻译 注解信息
+     * COMMON模式
+     * <p>传入类、方法、参数即可进行翻译 注解信息
      * @return 返回本地翻译需要的注解信息
      */
-    LocalSignature localSignature() default @LocalSignature;
+    CommonSignature commonSignature() default @CommonSignature;
 }

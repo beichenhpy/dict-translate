@@ -1,9 +1,11 @@
 package cn.beichenhpy.factory;
 
+import cn.beichenhpy.Dict;
 import cn.beichenhpy.enums.TranslateType;
 import lombok.SneakyThrows;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 
 /**
  * @author beichenhpy
@@ -12,16 +14,25 @@ import javax.annotation.PostConstruct;
  * <p> 2022/1/14 09:06
  */
 public class JSONDictTranslateHandler extends AbstractDictTranslate{
-    @SneakyThrows
-    @Override
-    public Object dictTranslate(Object result) {
-        //todo 实现直接修改结果集，添加翻译后的字段
-        return result;
-    }
 
     @PostConstruct
     @Override
     protected void add() {
         TRANSLATE_HANDLERS.put(TranslateType.JSON, this);
+    }
+
+    @Override
+    protected void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception {
+        //todo
+    }
+
+    @Override
+    protected void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception {
+        //todo
+    }
+
+    @Override
+    protected void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception {
+        //todo
     }
 }

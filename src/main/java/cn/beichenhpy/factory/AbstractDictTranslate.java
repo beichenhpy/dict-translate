@@ -5,7 +5,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,6 +35,19 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * 将处理器存放到TRANSLATE_HANDLERS中
      */
     protected abstract void add();
+
+
+    protected abstract void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
+
+    protected abstract void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
+
+    protected abstract void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
+
+    @Override
+    public Object dictTranslate(Object result) throws Exception {
+        handleTranslate(result);
+        return result;
+    }
 
     /**
      * 检查是否需要翻译
@@ -83,16 +95,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                 }
             }
         }
-        mainTranslate(record);
-    }
-
-    /**
-     * 实际翻译方法
-     *
-     * @param record 翻译对象
-     */
-    @SneakyThrows(Exception.class)
-    protected void mainTranslate(Object record) {
         //添加类缓存
         List<Field> fields = getNonStaticFiled(record);
         for (Field field : fields) {
@@ -119,140 +121,18 @@ public abstract class AbstractDictTranslate implements DictTranslate {
             String ref = annotation.ref();
             switch (annotation.dictType()) {
                 case SIMPLE:
-                    doSimpleTrans(key, record, ref);
+                    doSimpleTranslate(record, field, key, ref, annotation);
                     break;
-                case LOCAL:
-                    doLocalTrans(annotation, ref, key, record);
+                case COMMON:
+                    doCommonTranslate(record, field, key, ref, annotation);
                     break;
-                case TABLE:
-                    doTableTrans(record, ref, annotation, key);
+                case DB:
+                    doDbTranslate(record, field, key, ref, annotation);
                     break;
                 default:
                     break;
 
             }
         }
-    }
-
-
-    /**
-     * 翻译简单字段
-     *
-     * @param key    key值
-     * @param record 需要翻译的实体
-     * @param ref    需要赋值的字段
-     */
-    protected void doSimpleTrans(Object key, Object record, String ref) {
-        //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
-        if (key instanceof Boolean) {
-            if (!ObjectUtil.isEmpty(key)) {
-                if (Boolean.TRUE.toString().equals(key.toString())) {
-                    ReflectUtil.setFieldValue(record, ref, "是");
-                }
-                if (Boolean.FALSE.toString().equals(key.toString())) {
-                    ReflectUtil.setFieldValue(record, ref, "否");
-                }
-            }
-        }
-        if (key instanceof Integer) {
-            if (!ObjectUtil.isEmpty(key)) {
-                if ("1".equals(key.toString())) {
-                    ReflectUtil.setFieldValue(record, ref, "是");
-                }
-                if ("0".equals(key.toString())) {
-                    ReflectUtil.setFieldValue(record, ref, "是");
-                }
-            }
-        }
-    }
-
-    /**
-     * 翻译本地字典表
-     * <pre>
-     *  //本地字典表例子
-     *  public enum GenderEnum {
-     *     MAN(true, "男"),
-     *     WOMAN(false, "女");
-     *
-     *     private final Boolean key;
-     *     private final String value;
-     *
-     *     public static String getValue(Boolean key){
-     *         for (GenderEnum value : GenderEnum.values()) {
-     *             if (value.getKey().equals(key)){
-     *                 return value.getValue();
-     *             }
-     *         }
-     *         return null;
-     *     }
-     *
-     *     GenderEnum(Boolean key, String value) {
-     *         this.key = key;
-     *         this.value = value;
-     *     }
-     *
-     *     public Boolean getKey() {
-     *         return key;
-     *     }
-     *
-     *     public String getValue() {
-     *         return value;
-     *     }
-     * }
-     * </pre>
-     *
-     * @param annotation 注解
-     * @param ref        需要赋值的翻译字段
-     * @param key        字典值
-     * @param record     翻译实体
-     */
-    @SneakyThrows
-    protected void doLocalTrans(Dict annotation, String ref, Object key, Object record) {
-        LocalSignature enumSignature = annotation.localSignature();
-        //本地字典表
-        Class<?> enumClass = enumSignature.type();
-        //不为默认Object则进行转换
-        if (!enumClass.equals(Object.class)) {
-            String methodName = enumSignature.method();
-            if (methodName.isEmpty()) {
-                throw new IllegalArgumentException("字典转换失败：未传入[method]");
-            }
-            Class<?> parameterType = enumSignature.arg();
-            Method translateMethod = ReflectUtil.getMethod(enumClass, methodName, parameterType);
-            if (translateMethod == null) {
-                throw new IllegalArgumentException("字典转换失败：检查传入的[method]是否存在");
-            }
-            //判断是否为静态方法
-            int modifiers = translateMethod.getModifiers();
-            boolean isStatic = Modifier.isStatic(modifiers);
-            if (!isStatic) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[method]方法，必须为静态方法");
-            }
-            try {
-                Object translateValue = translateMethod.invoke(null, key);
-                ReflectUtil.setFieldValue(record, ref, translateValue);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[arg]类型是否正确");
-            }
-        }
-    }
-
-    /**
-     * 基于数据库/redis的翻译
-     *
-     * @param record     需要翻译的实体类
-     * @param ref        需要赋值的翻译字段
-     * @param annotation 字段上的注解
-     * @param key        字段值
-     */
-    @SneakyThrows
-    protected void doTableTrans(Object record, String ref, Dict annotation, Object key) {
-        //从数据库取数据
-        String dictType = annotation.dictTableType();
-        if (dictType.isEmpty()) {
-            throw new IllegalArgumentException("字典转换失败：未传入[dictTableType]");
-        }
-        //根据key查询到对应的dict value
-        ReflectUtil.setFieldValue(record, ref, CodeDictionary.getDictValueFromDictionaryList(dictType, key.toString()));
     }
 }
