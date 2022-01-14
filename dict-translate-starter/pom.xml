@@ -3,38 +3,24 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<artifactId>dict-translate</artifactId>
+		<groupId>cn.beichenhpy</groupId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<modules>
-		<module>dict-translate-core</module>
-		<module>dict-translate-starter</module>
-	</modules>
-	<packaging>pom</packaging>
-	<groupId>cn.beichenhpy</groupId>
-	<artifactId>dict-translate</artifactId>
+	<artifactId>dict-translate-starter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dict-translate</name>
-	<description>dict-translate</description>
+	<name>dict-translate-starter</name>
+	<description>for dict-translate-core starter</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-core</artifactId>
-			<version>5.7.19</version>
+			<groupId>cn.beichenhpy</groupId>
+			<artifactId>dict-translate-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
