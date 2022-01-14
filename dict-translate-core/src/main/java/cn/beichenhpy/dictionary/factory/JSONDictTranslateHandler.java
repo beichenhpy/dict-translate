@@ -3,7 +3,6 @@ package cn.beichenhpy.dictionary.factory;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.enums.TranslateType;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 
 /**
@@ -14,9 +13,8 @@ import java.lang.reflect.Field;
  */
 public class JSONDictTranslateHandler extends AbstractDictTranslate {
 
-    @PostConstruct
     @Override
-    protected void add() {
+    protected void registerHandler() {
         TRANSLATE_HANDLERS.put(TranslateType.JSON, this);
     }
 

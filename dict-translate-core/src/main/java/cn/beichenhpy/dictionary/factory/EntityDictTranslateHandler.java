@@ -7,7 +7,6 @@ import cn.beichenhpy.dictionary.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,9 +21,8 @@ import java.lang.reflect.Modifier;
  */
 public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
-    @PostConstruct
     @Override
-    protected void add() {
+    protected void registerHandler() {
         TRANSLATE_HANDLERS.put(TranslateType.ENTITY, this);
     }
 

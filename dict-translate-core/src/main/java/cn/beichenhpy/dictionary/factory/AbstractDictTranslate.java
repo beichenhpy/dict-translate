@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * 翻译抽象接口，主要提供一些方法
- * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #add()} 和 {@link #dictTranslate(Object)} 即可
+ * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #dictTranslate(Object)} 即可
  *
  * @author beichenhpy
  * @version 0.0.1
@@ -27,6 +27,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractDictTranslate implements DictTranslate {
 
+    //构造函数默认调用子类实现的add方法，将自身注册到TRANSLATE_HANDLERS中
+    public AbstractDictTranslate(){
+        registerHandler();
+    }
+
+
     //缓存非static字段
     protected static final Map<Class<?>, List<Field>> CLASS_NON_STATIC_FILED_CACHE = new HashMap<>();
     //翻译处理器，存放处理器类型和处理器
@@ -35,7 +41,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     /**
      * 将处理器存放到TRANSLATE_HANDLERS中
      */
-    protected abstract void add();
+    protected abstract void registerHandler();
 
     /**
      * 处理SIMPLE类型的翻译
