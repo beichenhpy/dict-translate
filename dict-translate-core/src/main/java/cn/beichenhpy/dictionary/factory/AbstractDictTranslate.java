@@ -69,17 +69,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected abstract void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
-    /**
-     * 处理DB类型的翻译
-     *
-     * @param current    当前对象值
-     * @param field      字段
-     * @param fieldValue 当前字段值
-     * @param ref        赋值字段
-     * @param dict       注解
-     * @throws Exception 异常
-     */
-    protected abstract void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
 
     @Override
@@ -182,9 +171,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                         break;
                     case COMMON:
                         doCommonTranslate(record, field, key, ref, annotation);
-                        break;
-                    case DB:
-                        doDbTranslate(record, field, key, ref, annotation);
                         break;
                     default:
                         break;

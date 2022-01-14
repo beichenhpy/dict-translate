@@ -152,10 +152,6 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
         }
     }
 
-    @Override
-    protected void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) {
-
-    }
 
 
 }

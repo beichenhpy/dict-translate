@@ -20,18 +20,11 @@ import java.lang.annotation.Target;
  *      private Integer gender;
  *      private String genderDict;
  *
- *      //TABLE模式
- *      <t>@Dict</t>(dictType = DictType.TABLE,
- *                       ref = "payStatusDict",
- *                       dictTableType = "1001")
- *      private String payStatus;
- *      private String payStatusDict;
  *
  *
- *      //LOCAL模式
- *      //getValue方法必须为静态方法
+ *      //COMMON模式
  *      //localEnumMethodParameterType是getValue的方法参数类型
- *      <t>@Dict</t>(dictType = DictType.LOCAL,
+ *      <t>@Dict</t>(dictType = DictType.COMMON,
  *                  ref = "payStatusDict",
  *                  localEnumClass = Status.class,
  *                  localEnumMethod = "getValue",
@@ -40,30 +33,6 @@ import java.lang.annotation.Target;
  *      private String payStatusDict;
  * </pre>
  * <p>
- * [JSON模式举例,不用写出字典翻译字段,直接返回json数据]<br>
- * <pre>
- *      //SIMPLE模式
- *      <t>@Dict</t>(dictType = DictType.SIMPLE,
- *                      ref = "genderDict")
- *      private Integer gender;
- *
- *      //TABLE模式
- *      <t>@Dict</t>(dictType = DictType.TABLE,
- *                       ref = "payStatusDict",
- *                       dictTableType = "1001")
- *      private String payStatus;
- *
- *
- *      //LOCAL模式
- *      //getValue方法必须为静态方法
- *      //localEnumMethodParameterType是getValue的方法参数类型
- *      <t>@Dict</t>(dictType = DictType.LOCAL,
- *                  ref = "payStatusDict",
- *                  localEnumClass = Status.class,
- *                  localEnumMethod = "getValue",
- *                  localEnumMethodParameterType = String.class)
- *      private String status;
- * </pre>
  * <p>所有需要<t>翻译</t>的实体类，都需要继承<t>NeedTranslate</t>
  * @author beichenhpy
  * @see DictTranslate#dictTranslate(Object)
@@ -93,11 +62,6 @@ public @interface Dict {
      * @return simple类型拓展
      */
     SimplePlugin simplePlugin() default @SimplePlugin;
-    /**
-     * TABLE类型时 字典对应type值
-     * @return type
-     */
-    DbSignature dbSignature() default @DbSignature;
 
     /**
      * COMMON模式

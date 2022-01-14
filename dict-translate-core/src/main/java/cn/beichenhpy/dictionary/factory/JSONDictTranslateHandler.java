@@ -28,8 +28,4 @@ public class JSONDictTranslateHandler extends AbstractDictTranslate {
         //todo
     }
 
-    @Override
-    protected void doDbTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception {
-        //todo
-    }
 }
