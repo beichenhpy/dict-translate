@@ -1,8 +1,8 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.CustomizeSignature;
-import cn.beichenhpy.dictionary.Dict;
-import cn.beichenhpy.dictionary.SimplePlugin;
+import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
+import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.annotation.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;

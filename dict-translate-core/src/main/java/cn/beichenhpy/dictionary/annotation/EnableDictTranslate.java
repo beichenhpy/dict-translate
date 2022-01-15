@@ -1,4 +1,4 @@
-package cn.beichenhpy.dictionary;
+package cn.beichenhpy.dictionary.annotation;
 
 import cn.beichenhpy.dictionary.enums.TranslateType;
 

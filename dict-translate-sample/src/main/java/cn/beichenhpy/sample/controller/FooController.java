@@ -1,6 +1,6 @@
 package cn.beichenhpy.sample.controller;
 
-import cn.beichenhpy.dictionary.EnableDictTranslate;
+import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.sample.entity.Student;
 import cn.beichenhpy.sample.service.FooService;
 import com.alibaba.fastjson.JSONObject;

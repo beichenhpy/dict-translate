@@ -1,5 +1,9 @@
-package cn.beichenhpy.dictionary;
+package cn.beichenhpy.dictionary.factory;
 
+import cn.beichenhpy.dictionary.AbstractDictTranslate;
+import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
+import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.annotation.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
@@ -12,6 +16,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
+
+import static cn.beichenhpy.dictionary.factory.DictTranslateFactory.TRANSLATE_HANDLERS;
 
 /**
  * 实体类翻译<p>
@@ -65,10 +71,10 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                 String ref = dict.ref();
                 switch (dict.dictType()) {
                     case SIMPLE:
-                        result = doSimpleTranslate(result, field, key, ref, dict);
+                        result = doSimpleTranslate(result, key, ref, dict);
                         break;
                     case CUSTOMIZE:
-                        result = doCustomizeTranslate(result, field, key, ref, dict);
+                        result = doCustomizeTranslate(result, key, ref, dict);
                         break;
                     default:
                         break;
@@ -80,7 +86,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
     }
 
 
-    protected Object doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) {
+    protected Object doSimpleTranslate(Object current, Object fieldValue, String ref, Dict dict) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
         SimplePlugin simplePlugin = dict.simplePlugin();
         boolean revert = simplePlugin.isRevert();
@@ -162,10 +168,9 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
      * @param dict 注解
      * @param ref        需要赋值的翻译字段
      * @param current 当前实体类
-     * @param field 字段
      * @param fieldValue 当前字段值
      */
-    protected Object doCustomizeTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception{
+    protected Object doCustomizeTranslate(Object current, Object fieldValue, String ref, Dict dict) throws Exception{
         CustomizeSignature customizeSignature = dict.commonSignature();
         //本地字典表
         Class<?> clazz = customizeSignature.type();

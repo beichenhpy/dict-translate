@@ -1,6 +1,7 @@
-package cn.beichenhpy.dictionary;
+package cn.beichenhpy.dictionary.annotation;
 
 
+import cn.beichenhpy.dictionary.DictTranslate;
 import cn.beichenhpy.dictionary.enums.DictType;
 
 import java.lang.annotation.ElementType;
@@ -33,7 +34,7 @@ import java.lang.annotation.Target;
  * </pre>
  * <p>
  * @author beichenhpy
- * @see DictTranslate#dictTranslate(Object, Class[])
+ * @see DictTranslate#dictTranslate(Object)
  * @since 0.0.1
  * @version 0.0.1
  * <p> 2021/9/2 13:15

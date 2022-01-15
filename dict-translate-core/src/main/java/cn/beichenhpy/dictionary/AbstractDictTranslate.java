@@ -1,5 +1,8 @@
 package cn.beichenhpy.dictionary;
 
+import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import cn.beichenhpy.dictionary.factory.EntityDictTranslateHandler;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -57,10 +60,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * Dict注解信息
      */
     protected static final SimpleCache<Field, Dict> DICT_ANNO_CACHE = new SimpleCache<>();
-    /**
-     * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
-     */
-    protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
 
     /**
      * 不进行翻译的类，用户输入

@@ -1,6 +1,8 @@
 package cn.beichenhpy.dictionary;
 
 
+import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import cn.beichenhpy.dictionary.factory.DictTranslateFactory;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ReflectUtil;
@@ -39,7 +41,7 @@ public class DictAspect {
     private static final SimpleCache<Method, EnableDictTranslate> METHOD_ENABLE_DICT_TRANSLATE_CACHE = new SimpleCache<>();
 
     //切点,需要根据注解位置来修改
-    @Pointcut(value = "@annotation(cn.beichenhpy.dictionary.EnableDictTranslate)")
+    @Pointcut(value = "@annotation(cn.beichenhpy.dictionary.annotation.EnableDictTranslate)")
     public void pointCut() {
 
     }
