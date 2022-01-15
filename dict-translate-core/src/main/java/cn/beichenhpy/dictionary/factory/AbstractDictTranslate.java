@@ -14,6 +14,8 @@ import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,11 +44,14 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * 不进行翻译的字段
      */
     protected static final Class<?>[] DEFAULT_TRANSLATE_BLACKLIST = {
-            Date.class,
-            LocalDate.class,
-            LocalDateTime.class,
-            Map.class,
-            HashMap.class
+            //*****************日期类*********************
+            Date.class, Calendar.class, Year.class, Month.class,
+            LocalDate.class, LocalDateTime.class,
+            //*****************Map*********************
+            Map.class, HashMap.class, TreeMap.class,
+            Hashtable.class, SortedMap.class, WeakHashMap.class,
+            //*****************Thread*********************
+            ThreadLocal.class
     };
 
     /**
@@ -94,14 +99,13 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     @Override
     public void dictTranslate(Object result, Class<?>[] noTranslateClasses) {
-        if (!checkBasic(result)) {
-            handleTranslate(result, noTranslateClasses);
-        }
+        handleTranslate(result, noTranslateClasses);
     }
 
 
     /**
      * 检查是否为basic/String
+     *
      * @param result 实体类
      * @return 是返回true 否则返回false
      */
@@ -135,16 +139,17 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     /**
      * 检查字段是否可用
-     * @param field 字段
+     *
+     * @param field              字段
      * @param noTranslateClasses 黑名单
      * @return 可用返回true 否则返回false
      */
-    protected boolean checkFieldIsAvailable(Field field, Class<?>[] noTranslateClasses){
-        if (field == null){
+    protected boolean checkFieldIsAvailable(Field field, Class<?>[] noTranslateClasses) {
+        if (field == null) {
             return false;
         }
         int modifiers = field.getModifiers();
-        if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)){
+        if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)) {
             return false;
         }
         Class<?> type = field.getType();
@@ -180,15 +185,15 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     @SneakyThrows
     protected void handleTranslate(Object record, Class<?>[] noTranslateClasses) {
-        if (record instanceof Collection) {
-            for (Object o : ((Collection<?>) record)) {
-                if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
-                    handleTranslate(o, noTranslateClasses);
+        //进入方法先判断是否满足条件?
+        if (!checkBasic(record) && checkNotInBlackList(record, noTranslateClasses)) {
+            if (record instanceof Collection) {
+                for (Object o : ((Collection<?>) record)) {
+                    if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
+                        handleTranslate(o, noTranslateClasses);
+                    }
                 }
-            }
-        } else {
-            //不在黑名单中进行翻译
-            if (checkNotInBlackList(record, noTranslateClasses)) {
+            } else {
                 //添加类缓存
                 List<Field> fields = getAvailableFields(record, noTranslateClasses);
                 for (Field field : fields) {
@@ -238,6 +243,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                 }
             }
         }
+
 
     }
 }
