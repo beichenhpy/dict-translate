@@ -63,9 +63,15 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     /**
      * 不进行翻译的类，用户输入
+     *
      * @see EnableDictTranslate#noTranslate()
      */
     protected static final ThreadLocal<Class<?>[]> NO_TRANSLATE_CLASS_HOLDER = new InheritableThreadLocal<>();
+
+    /**
+     * 字段值对应的类的可用字段集合缓存
+     */
+    protected static final SimpleCache<Class<?>, List<Field>> AVAILABLE_FIELD_CACHE = new SimpleCache<>();
 
     /**
      * 将处理器存放到TRANSLATE_HANDLERS中
@@ -134,7 +140,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
         //如果当前字段所在类属于java.lang,那么直接返回false
         String dp = declaringClass.getPackage().getName();
         log.debug("current package:{}, field name:{}", dp, field.getName());
-        if (dp.startsWith("java.lang")){
+        if (dp.startsWith("java.lang")) {
             return false;
         }
         if (type.isArray() || declaringClass.isArray()) {
@@ -161,10 +167,16 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected List<Field> getAvailableFields(Object record) {
         Class<?> clazz = record.getClass();
+        List<Field> fields = AVAILABLE_FIELD_CACHE.get(clazz);
+        if (fields != null) {
+            return fields;
+        }
         Class<?>[] noTranslateClasses = NO_TRANSLATE_CLASS_HOLDER.get();
         Field[] allFields = ReflectUtil.getFields(clazz);
-        return Arrays.stream(allFields)
+        fields = Arrays.stream(allFields)
                 .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
                 .collect(Collectors.toList());
+        AVAILABLE_FIELD_CACHE.put(clazz, fields);
+        return fields;
     }
 }
