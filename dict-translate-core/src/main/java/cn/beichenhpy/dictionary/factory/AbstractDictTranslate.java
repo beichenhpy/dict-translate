@@ -144,16 +144,26 @@ public abstract class AbstractDictTranslate implements DictTranslate {
             return false;
         }
         Class<?> type = field.getType();
-        if (type.isArray()) {
+        Class<?> declaringClass = field.getDeclaringClass();
+        //如果当前字段所在类属于java.lang,那么直接返回false
+        String dp = declaringClass.getPackage().getName();
+        log.debug("current package:{}, field name:{}", dp, field.getName());
+        if (dp.startsWith("java.lang")){
             return false;
         }
-        if (type.isAnnotation()) {
+        if (type.isArray() || declaringClass.isArray()) {
             return false;
         }
-        if (type.isEnum()) {
+        if (type.isAnnotation() || declaringClass.isAnnotation()) {
             return false;
         }
-        return !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, type) && !ArrayUtil.contains(noTranslateClasses, type);
+        if (type.isEnum() || declaringClass.isEnum()) {
+            return false;
+        }
+        return !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, type)
+                && !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, declaringClass)
+                && !ArrayUtil.contains(noTranslateClasses, type)
+                && !ArrayUtil.contains(noTranslateClasses, declaringClass);
     }
 
 
@@ -167,7 +177,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
         Class<?> clazz = record.getClass();
         Field[] allFields = ReflectUtil.getFields(clazz);
         return Arrays.stream(allFields)
-                .parallel()
                 .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
                 .collect(Collectors.toList());
     }
