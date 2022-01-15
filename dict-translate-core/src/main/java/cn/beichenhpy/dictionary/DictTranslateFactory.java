@@ -1,7 +1,5 @@
-package cn.beichenhpy.dictionary.factory;
+package cn.beichenhpy.dictionary;
 
-
-import cn.beichenhpy.dictionary.DictTranslate;
 
 import java.util.Map;
 

@@ -14,7 +14,7 @@ public interface DictTranslate {
      * 字典翻译
      * @param result 原返回值
      */
-    Object dictTranslate(Object result, Class<?>[] noTranslateClasses) throws Exception;
+    Object dictTranslate(Object result) throws Exception;
 
     /**
      * 查看是否不满足条件

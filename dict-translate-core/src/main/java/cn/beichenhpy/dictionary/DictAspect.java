@@ -1,7 +1,6 @@
 package cn.beichenhpy.dictionary;
 
 
-import cn.beichenhpy.dictionary.factory.DictTranslateFactory;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ReflectUtil;
@@ -15,6 +14,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+
+import static cn.beichenhpy.dictionary.AbstractDictTranslate.NO_TRANSLATE_CLASS_HOLDER;
 
 /**
  * @author beichenhpy
@@ -57,7 +58,8 @@ public class DictAspect {
             throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
         }
         if (!handler.unsatisfied(point)){
-            result = handler.dictTranslate(result, enableDictTranslate.noTranslate());
+            NO_TRANSLATE_CLASS_HOLDER.set(enableDictTranslate.noTranslate());
+            result = handler.dictTranslate(result);
         }
         return result;
     }

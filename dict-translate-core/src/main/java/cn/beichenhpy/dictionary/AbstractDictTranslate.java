@@ -1,7 +1,5 @@
-package cn.beichenhpy.dictionary.factory;
+package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.Dict;
-import cn.beichenhpy.dictionary.DictTranslate;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
 
 /**
  * 翻译抽象接口，主要提供一些方法
- * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #dictTranslate(Object, Class[])} 即可
+ * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #dictTranslate(Object)} 即可
  *
  * @author beichenhpy
  * @version 0.0.1
@@ -65,34 +63,23 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
 
     /**
+     * 不进行翻译的类，用户输入
+     * @see EnableDictTranslate#noTranslate()
+     */
+    protected static final ThreadLocal<Class<?>[]> NO_TRANSLATE_CLASS_HOLDER = new InheritableThreadLocal<>();
+
+    /**
      * 将处理器存放到TRANSLATE_HANDLERS中
      */
     protected abstract void registerHandler();
 
     /**
-     * 处理SIMPLE类型的翻译
+     * 翻译
      *
-     * @param current    当前对象值
-     * @param field      字段
-     * @param fieldValue 当前字段值
-     * @param ref        赋值字段
-     * @param dict       注解
+     * @param result 当前对象
      * @throws Exception 异常
      */
-    protected abstract Object doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
-
-    /**
-     * 处理CUSTOMIZE类型的翻译
-     *
-     * @param current    当前对象值
-     * @param field      字段
-     * @param fieldValue 当前字段值
-     * @param ref        赋值字段
-     * @param dict       注解
-     * @throws Exception 异常
-     */
-    protected abstract Object doCustomizeTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
-
+    protected abstract Object doTranslate(Object result) throws Exception;
 
     /**
      * 检查是否为basic/String
@@ -173,8 +160,9 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param record 实体
      * @return 返回字段数组
      */
-    protected List<Field> getAvailableFields(Object record, Class<?>[] noTranslateClasses) {
+    protected List<Field> getAvailableFields(Object record) {
         Class<?> clazz = record.getClass();
+        Class<?>[] noTranslateClasses = NO_TRANSLATE_CLASS_HOLDER.get();
         Field[] allFields = ReflectUtil.getFields(clazz);
         return Arrays.stream(allFields)
                 .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
