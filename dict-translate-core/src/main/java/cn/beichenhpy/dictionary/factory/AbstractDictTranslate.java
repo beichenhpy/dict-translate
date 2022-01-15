@@ -131,9 +131,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected void handleTranslate(Object record) {
         if (record instanceof Collection) {
             for (Object o : ((Collection<?>) record)) {
-                if (checkNeedTranslate(o)) {
-                    handleTranslate(o);
-                }
+                handleTranslate(o);
             }
         } else {
             //添加类缓存
@@ -143,7 +141,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                     field.setAccessible(true);
                 }catch (InaccessibleObjectException e){
                     log.error("由于{}的原因，该类型{}无法进行翻译，请检查你的注解是否标记正确",e.getMessage(), field.getType());
-                    return;
+                    continue;
                 }
                 //对象key
                 Object key = ReflectUtil.getFieldValue(record, field.getName());
@@ -158,22 +156,23 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                             handleTranslate(o);
                         }
                     }
-                }
-                Dict annotation = field.getAnnotation(Dict.class);
-                if (annotation == null) {
-                    continue;
-                }
-                String ref = annotation.ref();
-                switch (annotation.dictType()) {
-                    case SIMPLE:
-                        doSimpleTranslate(record, field, key, ref, annotation);
-                        break;
-                    case COMMON:
-                        doCommonTranslate(record, field, key, ref, annotation);
-                        break;
-                    default:
-                        break;
+                }else {
+                    Dict annotation = field.getAnnotation(Dict.class);
+                    if (annotation == null) {
+                        continue;
+                    }
+                    String ref = annotation.ref();
+                    switch (annotation.dictType()) {
+                        case SIMPLE:
+                            doSimpleTranslate(record, field, key, ref, annotation);
+                            break;
+                        case COMMON:
+                            doCommonTranslate(record, field, key, ref, annotation);
+                            break;
+                        default:
+                            break;
 
+                    }
                 }
             }
         }
