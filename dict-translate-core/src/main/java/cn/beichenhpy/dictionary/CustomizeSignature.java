@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * COMMON情况，方法签名
+ * CUSTOMIZE情况，方法签名
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
-public @interface CommonSignature {
+public @interface CustomizeSignature {
     /**
      * LOCAL类型时处理
      * 本地枚举类 Object不处理

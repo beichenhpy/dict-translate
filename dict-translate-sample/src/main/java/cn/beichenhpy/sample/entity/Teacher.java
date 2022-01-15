@@ -1,6 +1,6 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.CommonSignature;
+import cn.beichenhpy.dictionary.CustomizeSignature;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
@@ -25,8 +25,8 @@ public class Teacher {
 
     private String genderDict;
 
-    @Dict(dictType = DictType.COMMON, ref = "statusDict",
-            commonSignature = @CommonSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
+    @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict",
+            commonSignature = @CustomizeSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
     private Long status;
 
     private String statusDict;

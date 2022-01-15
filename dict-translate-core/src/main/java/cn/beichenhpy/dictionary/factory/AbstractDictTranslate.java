@@ -8,7 +8,6 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
@@ -80,7 +79,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected abstract Object doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
     /**
-     * 处理COMMON类型的翻译
+     * 处理CUSTOMIZE类型的翻译
      *
      * @param current    当前对象值
      * @param field      字段
@@ -89,7 +88,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param dict       注解
      * @throws Exception 异常
      */
-    protected abstract Object doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
+    protected abstract Object doCustomizeTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
 
     /**

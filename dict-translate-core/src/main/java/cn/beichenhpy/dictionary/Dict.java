@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
  *
  *
  *
- *      //COMMON模式
- *      //localEnumMethodParameterType是getValue的方法参数类型
- *      <t>@Dict</t>(dictType = DictType.COMMON,
+ *      //CUSTOMIZE
+ *      <t>@Dict</t>(dictType = DictType.CUSTOMIZE,
  *                  ref = "payStatusDict",
  *                  localEnumClass = Status.class,
  *                  localEnumMethod = "getValue",
@@ -33,7 +32,6 @@ import java.lang.annotation.Target;
  *      private String payStatusDict;
  * </pre>
  * <p>
- * <p>所有需要<t>翻译</t>的实体类，都需要继承<t>NeedTranslate</t>
  * @author beichenhpy
  * @see DictTranslate#dictTranslate(Object, Class[])
  * @since 0.0.1
@@ -63,9 +61,9 @@ public @interface Dict {
     SimplePlugin simplePlugin() default @SimplePlugin;
 
     /**
-     * COMMON模式
+     * CUSTOMIZE模式
      * <p>传入类、方法、参数即可进行翻译 注解信息
      * @return 返回本地翻译需要的注解信息
      */
-    CommonSignature commonSignature() default @CommonSignature;
+    CustomizeSignature commonSignature() default @CustomizeSignature;
 }

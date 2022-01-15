@@ -17,7 +17,7 @@ public enum DictType {
      */
     SIMPLE,
     /**
-     * 转换本地方法提供数据
+     * 自定义方法转换
      */
-    COMMON
+    CUSTOMIZE
 }

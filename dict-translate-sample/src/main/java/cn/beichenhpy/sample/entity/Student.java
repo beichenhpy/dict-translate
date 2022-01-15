@@ -1,6 +1,6 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.CommonSignature;
+import cn.beichenhpy.dictionary.CustomizeSignature;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.enums.DictType;
 import cn.beichenhpy.sample.service.FooService;
@@ -26,14 +26,14 @@ public class Student {
 
     private String genderDict;
 
-    @Dict(dictType = DictType.COMMON, ref = "statusDict",
-            commonSignature = @CommonSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
+    @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict",
+            commonSignature = @CustomizeSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
     private Long status;
 
     private String statusDict;
 
-    @Dict(dictType = DictType.COMMON, ref = "healthText",
-            commonSignature = @CommonSignature(type = FooService.class, method = "getValue", arg = String.class))
+    @Dict(dictType = DictType.CUSTOMIZE, ref = "healthText",
+            commonSignature = @CustomizeSignature(type = FooService.class, method = "getValue", arg = String.class))
     private String health;
 
     private String healthText;

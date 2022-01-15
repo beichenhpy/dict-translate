@@ -1,6 +1,6 @@
 package cn.beichenhpy.dictionary.factory;
 
-import cn.beichenhpy.dictionary.CommonSignature;
+import cn.beichenhpy.dictionary.CustomizeSignature;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
@@ -119,17 +119,17 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
      * @param fieldValue 当前字段值
      */
     @Override
-    protected Object doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception{
-        CommonSignature commonSignature = dict.commonSignature();
+    protected Object doCustomizeTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception{
+        CustomizeSignature customizeSignature = dict.commonSignature();
         //本地字典表
-        Class<?> clazz = commonSignature.type();
+        Class<?> clazz = customizeSignature.type();
         //不为默认Object则进行转换
         if (!clazz.equals(Object.class)) {
-            String methodName = commonSignature.method();
+            String methodName = customizeSignature.method();
             if (methodName.isEmpty()) {
                 throw new IllegalArgumentException("字典转换失败：未传入[method]");
             }
-            Class<?> parameterType = commonSignature.arg();
+            Class<?> parameterType = customizeSignature.arg();
             Method translateMethod = ReflectUtil.getMethod(clazz, methodName, parameterType);
             if (translateMethod == null) {
                 throw new IllegalArgumentException("字典转换失败：检查传入的[method]是否存在");
@@ -189,7 +189,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                     if (key == null) {
                         continue;
                     }
-                    //是否为Collection
+                    //是否为基础类型
                     if (!checkBasic(key)) {
                         dictTranslate(key, noTranslateClasses);
                     } else {
@@ -206,8 +206,8 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                             case SIMPLE:
                                 result = doSimpleTranslate(result, field, key, ref, dict);
                                 break;
-                            case COMMON:
-                                result = doCommonTranslate(result, field, key, ref, dict);
+                            case CUSTOMIZE:
+                                result = doCustomizeTranslate(result, field, key, ref, dict);
                                 break;
                             default:
                                 break;
