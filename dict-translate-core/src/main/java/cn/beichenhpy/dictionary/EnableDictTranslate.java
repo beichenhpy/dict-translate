@@ -34,4 +34,10 @@ public @interface EnableDictTranslate {
      */
     String mode() default TranslateType.ENTITY;
 
+    /**
+     * 翻译时不需要翻译的类
+     * @return 返回不需要翻译的类数组
+     */
+    Class<?>[] noTranslate() default {};
+
 }

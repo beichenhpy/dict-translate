@@ -3,6 +3,8 @@ package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.factory.DictTranslateFactory;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -30,6 +32,11 @@ public class DictAspect {
     @Resource
     private DictTranslateFactory dictTranslateFactory;
 
+    /**
+     * EnableDictTranslate注解的缓存
+     */
+    private static final SimpleCache<Method, EnableDictTranslate> METHOD_ENABLE_DICT_TRANSLATE_CACHE = new SimpleCache<>();
+
     //切点,需要根据注解位置来修改
     @Pointcut(value = "@annotation(cn.beichenhpy.dictionary.EnableDictTranslate)")
     public void pointCut() {
@@ -49,7 +56,7 @@ public class DictAspect {
         if (handler == null){
             throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
         }
-        handler.dictTranslate(result);
+        handler.dictTranslate(result, enableDictTranslate.noTranslate());
         return result;
     }
 
@@ -67,12 +74,16 @@ public class DictAspect {
         //转换为MethodSignature
         MethodSignature methodSignature = Convert.convert(MethodSignature.class,signature);
         //通过目标类反射获取方法对象
-        try {
-            Method method = clazz.getDeclaredMethod(methodSignature.getName(), methodSignature.getParameterTypes());
-            return method.getAnnotation(EnableDictTranslate.class);
-        } catch (NoSuchMethodException e) {
+        Method method = ReflectUtil.getMethod(clazz, methodSignature.getName(), methodSignature.getParameterTypes());
+        if (method == null){
             return null;
         }
+        EnableDictTranslate enableDictTranslate = METHOD_ENABLE_DICT_TRANSLATE_CACHE.get(method);
+        if (enableDictTranslate == null){
+            enableDictTranslate = method.getAnnotation(EnableDictTranslate.class);
+            METHOD_ENABLE_DICT_TRANSLATE_CACHE.put(method, enableDictTranslate);
+        }
+        return enableDictTranslate;
     }
 
 }

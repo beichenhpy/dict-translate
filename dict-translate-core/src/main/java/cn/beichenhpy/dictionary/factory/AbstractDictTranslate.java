@@ -3,6 +3,8 @@ package cn.beichenhpy.dictionary.factory;
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.DictTranslate;
 import cn.beichenhpy.dictionary.NeedRecursionTranslate;
+import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.SneakyThrows;
@@ -11,13 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 /**
  * 翻译抽象接口，主要提供一些方法
- * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #dictTranslate(Object)} 即可
+ * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #dictTranslate(Object, Class[])} 即可
  *
  * @author beichenhpy
  * @version 0.0.1
@@ -28,15 +32,35 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractDictTranslate implements DictTranslate {
 
-    //构造函数默认调用子类实现的add方法，将自身注册到TRANSLATE_HANDLERS中
+    /**
+     * 构造函数默认调用子类实现的add方法，将自身注册到TRANSLATE_HANDLERS中
+     */
     public AbstractDictTranslate() {
         registerHandler();
     }
 
+    /**
+     * 不进行翻译的字段
+     */
+    protected static final Class<?>[] DEFAULT_TRANSLATE_BLACKLIST = {
+            Date.class,
+            LocalDate.class,
+            LocalDateTime.class,
+            Map.class,
+            HashMap.class
+    };
 
-    //缓存非static字段
-    protected static final Map<Class<?>, List<Field>> CLASS_NON_STATIC_FILED_CACHE = new HashMap<>();
-    //翻译处理器，存放处理器类型和处理器
+    /**
+     * Dict注解信息
+     */
+    protected static final SimpleCache<Field, Dict> DICT_ANNO_CACHE = new SimpleCache<>();
+    /**
+     * runtime期间会进行put/get 使用SimpleCache进行线程安全操作
+     */
+    protected static final SimpleCache<Class<?>, List<Field>> CLASS_AVAILABLE_FIELDS_CACHE = new SimpleCache<>();
+    /**
+     * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
+     */
     protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
 
     /**
@@ -69,13 +93,21 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected abstract void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
 
-
     @Override
-    public Object dictTranslate(Object result) throws Exception {
-        if (!ClassUtil.isBasicType(result.getClass()) && !String.class.equals(result.getClass())){
-            handleTranslate(result);
+    public void dictTranslate(Object result, Class<?>[] noTranslateClasses) {
+        if (!checkBasic(result)) {
+            handleTranslate(result, noTranslateClasses);
         }
-        return result;
+    }
+
+
+    /**
+     * 检查是否为basic/String
+     * @param result 实体类
+     * @return 是返回true 否则返回false
+     */
+    protected boolean checkBasic(Object result) {
+        return ClassUtil.isBasicType(result.getClass()) || String.class.equals(result.getClass());
     }
 
     /**
@@ -100,25 +132,43 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     }
 
     /**
-     * 获取所有非static变量
+     * 检查是否不在翻译黑名单中
+     *
+     * @param record             当前类对象
+     * @param noTranslateClasses 黑名单
+     * @return 不在返回是，否则返回否
+     */
+    protected boolean checkNotInBlackList(Object record, Class<?>[] noTranslateClasses) {
+        return !ArrayUtil.contains(noTranslateClasses, record.getClass()) &&
+                !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, record.getClass());
+    }
+
+    /**
+     * 获取所有满足条件的字段
      *
      * @param record 实体
      * @return 返回字段数组
      */
-    protected List<Field> getAvailableFields(Object record) {
+    protected List<Field> getAvailableFields(Object record, Class<?>[] noTranslateClasses) {
         Class<?> clazz = record.getClass();
-        List<Field> fields = CLASS_NON_STATIC_FILED_CACHE.get(clazz);
+        List<Field> fields = CLASS_AVAILABLE_FIELDS_CACHE.get(clazz);
         if (fields != null) {
             return fields;
         }
         Field[] allFields = ReflectUtil.getFields(clazz);
         List<Field> noAvailableFields = Arrays.stream(allFields)
                 .parallel()
+                //非空
                 .filter(Objects::nonNull)
+                //非static
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                //非transient
                 .filter(field -> !Modifier.isTransient(field.getModifiers()))
+                //筛选黑名单中的字段
+                .filter(field -> !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, field.getType()))
+                .filter(field -> !ArrayUtil.contains(noTranslateClasses, field.getType()))
                 .collect(Collectors.toList());
-        CLASS_NON_STATIC_FILED_CACHE.put(clazz, noAvailableFields);
+        CLASS_AVAILABLE_FIELDS_CACHE.put(clazz, noAvailableFields);
         return noAvailableFields;
     }
 
@@ -128,50 +178,61 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param record 翻译实体
      */
     @SneakyThrows
-    protected void handleTranslate(Object record) {
+    protected void handleTranslate(Object record, Class<?>[] noTranslateClasses) {
         if (record instanceof Collection) {
             for (Object o : ((Collection<?>) record)) {
-                handleTranslate(o);
+                if (checkNotInBlackList(o, noTranslateClasses) && !checkBasic(o)) {
+                    handleTranslate(o, noTranslateClasses);
+                }
             }
         } else {
-            //添加类缓存
-            List<Field> fields = getAvailableFields(record);
-            for (Field field : fields) {
-                try {
-                    field.setAccessible(true);
-                }catch (InaccessibleObjectException e){
-                    log.error("由于{}的原因，该类型{}无法进行翻译，请检查你的注解是否标记正确",e.getMessage(), field.getType());
-                    continue;
-                }
-                //对象key
-                Object key = ReflectUtil.getFieldValue(record, field.getName());
-                //key的值不存在，则跳过循环
-                if (key == null) {
-                    continue;
-                }
-                //是否为Collection
-                if (key instanceof Collection) {
-                    for (Object o : ((Collection<?>) key)) {
-                        if (checkNeedTranslate(o)) {
-                            handleTranslate(o);
-                        }
-                    }
-                }else {
-                    Dict annotation = field.getAnnotation(Dict.class);
-                    if (annotation == null) {
+            //不在黑名单中进行翻译
+            if (checkNotInBlackList(record, noTranslateClasses)) {
+                //添加类缓存
+                List<Field> fields = getAvailableFields(record, noTranslateClasses);
+                for (Field field : fields) {
+                    try {
+                        field.setAccessible(true);
+                    } catch (InaccessibleObjectException e) {
+                        log.error("由于{}的原因，该类型{}无法进行翻译，" +
+                                        "可以在EnableDictTranslate注解中的noTranslate属性添加不需要翻译的字段，以抑制该报错",
+                                e.getMessage(), field.getType());
                         continue;
                     }
-                    String ref = annotation.ref();
-                    switch (annotation.dictType()) {
-                        case SIMPLE:
-                            doSimpleTranslate(record, field, key, ref, annotation);
-                            break;
-                        case COMMON:
-                            doCommonTranslate(record, field, key, ref, annotation);
-                            break;
-                        default:
-                            break;
+                    //对象key
+                    Object key = ReflectUtil.getFieldValue(record, field.getName());
+                    //key的值不存在，则跳过循环
+                    if (key == null) {
+                        continue;
+                    }
+                    //是否为Collection
+                    if (key instanceof Collection) {
+                        for (Object o : ((Collection<?>) key)) {
+                            if (checkNotInBlackList(o, noTranslateClasses) && checkNeedTranslate(o)) {
+                                handleTranslate(o, noTranslateClasses);
+                            }
+                        }
+                    } else {
+                        Dict dict = DICT_ANNO_CACHE.get(field);
+                        if (dict == null) {
+                            dict = field.getAnnotation(Dict.class);
+                            DICT_ANNO_CACHE.put(field, dict);
+                        }
+                        if (dict == null) {
+                            continue;
+                        }
+                        String ref = dict.ref();
+                        switch (dict.dictType()) {
+                            case SIMPLE:
+                                doSimpleTranslate(record, field, key, ref, dict);
+                                break;
+                            case COMMON:
+                                doCommonTranslate(record, field, key, ref, dict);
+                                break;
+                            default:
+                                break;
 
+                        }
                     }
                 }
             }
