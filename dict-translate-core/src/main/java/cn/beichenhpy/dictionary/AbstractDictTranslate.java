@@ -2,7 +2,6 @@ package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.factory.EntityDictTranslateHandler;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -38,6 +37,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     public AbstractDictTranslate() {
         registerHandler();
+        log.trace("register success, current handlers {}", TRANSLATE_HANDLERS);
     }
 
     /**
@@ -56,6 +56,10 @@ public abstract class AbstractDictTranslate implements DictTranslate {
             , ThreadLocal.class
     };
 
+    /**
+     * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
+     */
+    protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
     /**
      * Dict注解信息
      */
@@ -77,14 +81,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * 将处理器存放到TRANSLATE_HANDLERS中
      */
     protected abstract void registerHandler();
-
-    /**
-     * 翻译
-     *
-     * @param result 当前对象
-     * @throws Exception 异常
-     */
-    protected abstract Object doTranslate(Object result) throws Exception;
 
     /**
      * 检查是否为basic/String

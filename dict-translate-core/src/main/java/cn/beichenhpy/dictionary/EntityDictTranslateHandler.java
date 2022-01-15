@@ -1,6 +1,5 @@
-package cn.beichenhpy.dictionary.factory;
+package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.AbstractDictTranslate;
 import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.SimplePlugin;
@@ -17,7 +16,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
-import static cn.beichenhpy.dictionary.factory.DictTranslateFactory.TRANSLATE_HANDLERS;
 
 /**
  * 实体类翻译<p>
@@ -35,55 +33,6 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
         TRANSLATE_HANDLERS.put(TranslateType.ENTITY, this);
     }
 
-
-    @Override
-    protected Object doTranslate(Object result) throws Exception {
-        //添加类缓存
-        List<Field> fields = getAvailableFields(result);
-        for (Field field : fields) {
-            //fix 高版本会出现InaccessibleObjectException
-            try {
-                field.setAccessible(true);
-            } catch (Exception e) {
-                log.warn("由于{}的原因,跳过对{}的翻译," +
-                                "可以在EnableDictTranslate注解中的noTranslate属性添加{}字段以抑制警告",
-                        e.getMessage(), result.getClass().getName() ,result.getClass());
-                continue;
-            }
-            //对象key
-            Object key = ReflectUtil.getFieldValue(result, field);
-            //key的值不存在，则跳过循环
-            if (key == null) {
-                continue;
-            }
-            //是否为基础类型
-            if (!checkBasic(key)) {
-                dictTranslate(key);
-            } else {
-                Dict dict = DICT_ANNO_CACHE.get(field);
-                if (dict == null) {
-                    dict = field.getAnnotation(Dict.class);
-                    DICT_ANNO_CACHE.put(field, dict);
-                }
-                if (dict == null) {
-                    continue;
-                }
-                String ref = dict.ref();
-                switch (dict.dictType()) {
-                    case SIMPLE:
-                        result = doSimpleTranslate(result, key, ref, dict);
-                        break;
-                    case CUSTOMIZE:
-                        result = doCustomizeTranslate(result, key, ref, dict);
-                        break;
-                    default:
-                        break;
-
-                }
-            }
-        }
-        return result;
-    }
 
 
     protected Object doSimpleTranslate(Object current, Object fieldValue, String ref, Dict dict) {
@@ -223,7 +172,50 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                     }
                 }
             } else {
-                result = doTranslate(result);
+                //添加类缓存
+                List<Field> fields = getAvailableFields(result);
+                for (Field field : fields) {
+                    //fix 高版本会出现InaccessibleObjectException
+                    try {
+                        field.setAccessible(true);
+                    } catch (Exception e) {
+                        log.warn("由于{}的原因,跳过对{}的翻译," +
+                                        "可以在EnableDictTranslate注解中的noTranslate属性添加{}字段以抑制警告",
+                                e.getMessage(), result.getClass().getName() ,result.getClass());
+                        continue;
+                    }
+                    //对象key
+                    Object key = ReflectUtil.getFieldValue(result, field);
+                    //key的值不存在，则跳过循环
+                    if (key == null) {
+                        continue;
+                    }
+                    //是否为基础类型
+                    if (!checkBasic(key)) {
+                        dictTranslate(key);
+                    } else {
+                        Dict dict = DICT_ANNO_CACHE.get(field);
+                        if (dict == null) {
+                            dict = field.getAnnotation(Dict.class);
+                            DICT_ANNO_CACHE.put(field, dict);
+                        }
+                        if (dict == null) {
+                            continue;
+                        }
+                        String ref = dict.ref();
+                        switch (dict.dictType()) {
+                            case SIMPLE:
+                                result = doSimpleTranslate(result, key, ref, dict);
+                                break;
+                            case CUSTOMIZE:
+                                result = doCustomizeTranslate(result, key, ref, dict);
+                                break;
+                            default:
+                                break;
+
+                        }
+                    }
+                }
             }
         }
         return result;

@@ -2,7 +2,6 @@ package cn.beichenhpy.dictionary;
 
 
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.factory.DictTranslateFactory;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ReflectUtil;

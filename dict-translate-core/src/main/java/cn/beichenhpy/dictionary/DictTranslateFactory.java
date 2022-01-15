@@ -1,10 +1,9 @@
-package cn.beichenhpy.dictionary.factory;
+package cn.beichenhpy.dictionary;
 
 
-import cn.beichenhpy.dictionary.DictTranslate;
-
-import java.util.HashMap;
 import java.util.Map;
+
+import static cn.beichenhpy.dictionary.AbstractDictTranslate.TRANSLATE_HANDLERS;
 
 
 /**
@@ -17,10 +16,7 @@ import java.util.Map;
 
 public class DictTranslateFactory {
 
-    /**
-     * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
-     */
-    protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
+
 
     public DictTranslate getHandler(String type) {
         for (Map.Entry<String, DictTranslate> entry : TRANSLATE_HANDLERS.entrySet()) {

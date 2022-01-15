@@ -1,7 +1,5 @@
 package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.factory.DictTranslateFactory;
-import cn.beichenhpy.dictionary.factory.EntityDictTranslateHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -15,22 +15,16 @@ import java.lang.annotation.Target;
  * <p>
  * [ENTITY模式举例,需要给出字典翻译字段,返回翻译后的实体类]<p>
  * <pre>
- *      //SIMPLE模式
- *      <t>@Dict</t>(dictType = DictType.SIMPLE,
- *                      ref = "genderDict")
- *      private Integer gender;
- *      private String genderDict;
+ *     <t>@Dict</t>(dictType = DictType.SIMPLE, ref = "genderDict")
+ *     private Boolean gender;
  *
+ *     private String genderDict;
  *
+ *     <t>@Dict</t>(dictType = DictType.CUSTOMIZE, ref = "statusDict",
+ *             commonSignature = @CustomizeSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
+ *     private Long status;
  *
- *      //CUSTOMIZE
- *      <t>@Dict</t>(dictType = DictType.CUSTOMIZE,
- *                  ref = "payStatusDict",
- *                  localEnumClass = Status.class,
- *                  localEnumMethod = "getValue",
- *                  localEnumMethodParameterType = String.class)
- *      private String status;
- *      private String payStatusDict;
+ *     private String statusDict;
  * </pre>
  * <p>
  * @author beichenhpy

@@ -12,3 +12,7 @@ mybatis-plus:
     banner: false
     db-config:
       id-type: assign_id
+
+logging:
+  level:
+    cn.beichenhpy.dictionary: trace

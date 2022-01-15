@@ -11,7 +11,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
  */
 public interface DictTranslate {
     /**
-     * 字典翻译
+     * 字典翻译,需要实现DictType类型的翻译
+     * @see cn.beichenhpy.dictionary.enums.DictType
      * @param result 原返回值
      */
     Object dictTranslate(Object result) throws Exception;
