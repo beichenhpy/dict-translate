@@ -57,10 +57,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected static final SimpleCache<Field, Dict> DICT_ANNO_CACHE = new SimpleCache<>();
     /**
-     * runtime期间会进行put/get 使用SimpleCache进行线程安全操作
-     */
-    protected static final SimpleCache<Class<?>, List<Field>> CLASS_AVAILABLE_FIELDS_CACHE = new SimpleCache<>();
-    /**
      * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
      */
     protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
@@ -157,16 +153,10 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected List<Field> getAvailableFields(Object record, Class<?>[] noTranslateClasses) {
         Class<?> clazz = record.getClass();
-        List<Field> fields = CLASS_AVAILABLE_FIELDS_CACHE.get(clazz);
-        if (fields != null) {
-            return fields;
-        }
         Field[] allFields = ReflectUtil.getFields(clazz);
-        List<Field> noAvailableFields = Arrays.stream(allFields)
+        return Arrays.stream(allFields)
                 .parallel()
                 .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
                 .collect(Collectors.toList());
-        CLASS_AVAILABLE_FIELDS_CACHE.put(clazz, noAvailableFields);
-        return noAvailableFields;
     }
 }

@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -175,16 +174,17 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                 //添加类缓存
                 List<Field> fields = getAvailableFields(result, noTranslateClasses);
                 for (Field field : fields) {
+                    //fix 高版本会出现InaccessibleObjectException
                     try {
                         field.setAccessible(true);
-                    } catch (InaccessibleObjectException e) {
+                    } catch (Exception e) {
                         log.error("由于{}的原因，该类型{}无法进行翻译，" +
                                         "可以在EnableDictTranslate注解中的noTranslate属性添加不需要翻译的字段，以抑制该报错",
                                 e.getMessage(), result.getClass());
                         continue;
                     }
                     //对象key
-                    Object key = ReflectUtil.getFieldValue(result, field.getName());
+                    Object key = ReflectUtil.getFieldValue(result, field);
                     //key的值不存在，则跳过循环
                     if (key == null) {
                         continue;

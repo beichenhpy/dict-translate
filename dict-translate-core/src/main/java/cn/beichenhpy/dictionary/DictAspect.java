@@ -56,7 +56,9 @@ public class DictAspect {
         if (handler == null){
             throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
         }
-        handler.dictTranslate(result, enableDictTranslate.noTranslate());
+        if (!handler.unsatisfied(point)){
+            result = handler.dictTranslate(result, enableDictTranslate.noTranslate());
+        }
         return result;
     }
 
