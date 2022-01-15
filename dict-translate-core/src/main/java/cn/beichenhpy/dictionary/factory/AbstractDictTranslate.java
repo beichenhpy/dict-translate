@@ -8,6 +8,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
@@ -42,8 +43,10 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * 不进行翻译的字段
      */
     protected static final Class<?>[] DEFAULT_TRANSLATE_BLACKLIST = {
+            //******************base********************
+            Enum.class, Annotation.class
             //*****************日期类*********************
-            Date.class, Calendar.class, Year.class
+            , Date.class, Calendar.class, Year.class
             , Month.class, LocalDate.class, LocalDateTime.class
             //*****************Map*********************
             , Map.class, HashMap.class, TreeMap.class
@@ -141,14 +144,13 @@ public abstract class AbstractDictTranslate implements DictTranslate {
             return false;
         }
         Class<?> type = field.getType();
-        Class<? extends Field> clazz = field.getClass();
-        if (type.isArray() || clazz.isArray()) {
+        if (type.isArray()) {
             return false;
         }
-        if (type.isAnnotation() || clazz.isAnnotation()) {
+        if (type.isAnnotation()) {
             return false;
         }
-        if (type.isEnum() || clazz.isEnum()) {
+        if (type.isEnum()) {
             return false;
         }
         return !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, type) && !ArrayUtil.contains(noTranslateClasses, type);
