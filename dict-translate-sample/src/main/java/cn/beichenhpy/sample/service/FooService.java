@@ -97,7 +97,7 @@ public class FooService {
         Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).homes(Collections.singletonList(Collections.singletonList(Home.builder().address("测试").build()))).build();
         Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).localDateTimes(Collections.singletonList(LocalDateTime.now())).build();
         Student student = Student.builder().health("10011002").gender(false).status(10041001L).date(new Date()).dates(Collections.singletonList(new Date())).test(map).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
-        for (int i = 0; i < 10_000_000; i++) {
+        for (int i = 0; i < 10_000_00; i++) {
             students.add(student);
         }
         log.info("big data处理完成");

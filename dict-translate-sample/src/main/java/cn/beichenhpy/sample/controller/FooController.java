@@ -100,10 +100,10 @@ public class FooController {
     //10_000_000 数据翻译 20s以上 需要优化
     @GetMapping("/test11")
     public void test11() {
-        List<Student> students = fooService.bigData();
-        log.info("处理完成：{}",students.size());
-        Student student = students.get(0);
-        log.info("student:{}", student);
+        for (int i = 0; i < 10; i++) {
+            List<Student> students = fooService.bigData();
+        }
+        log.info("处理完成");
     }
 
 }
