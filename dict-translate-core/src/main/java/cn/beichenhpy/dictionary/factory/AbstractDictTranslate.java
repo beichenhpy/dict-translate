@@ -143,6 +143,26 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                 !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, record.getClass());
     }
 
+
+    /**
+     * 检查字段是否可用
+     * @param field 字段
+     * @param noTranslateClasses 黑名单
+     * @return 可用返回true 否则返回false
+     */
+    protected boolean checkFieldIsAvailable(Field field, Class<?>[] noTranslateClasses){
+        if (field == null){
+            return false;
+        }
+        int modifiers = field.getModifiers();
+        if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)){
+            return false;
+        }
+        Class<?> type = field.getType();
+        return !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, type) && !ArrayUtil.contains(noTranslateClasses, type);
+    }
+
+
     /**
      * 获取所有满足条件的字段
      *
@@ -158,15 +178,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
         Field[] allFields = ReflectUtil.getFields(clazz);
         List<Field> noAvailableFields = Arrays.stream(allFields)
                 .parallel()
-                //非空
-                .filter(Objects::nonNull)
-                //非static
-                .filter(field -> !Modifier.isStatic(field.getModifiers()))
-                //非transient
-                .filter(field -> !Modifier.isTransient(field.getModifiers()))
-                //筛选黑名单中的字段
-                .filter(field -> !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, field.getType()))
-                .filter(field -> !ArrayUtil.contains(noTranslateClasses, field.getType()))
+                .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
                 .collect(Collectors.toList());
         CLASS_AVAILABLE_FIELDS_CACHE.put(clazz, noAvailableFields);
         return noAvailableFields;
