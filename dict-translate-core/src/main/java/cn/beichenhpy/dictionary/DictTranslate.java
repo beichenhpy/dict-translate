@@ -1,5 +1,7 @@
 package cn.beichenhpy.dictionary;
 
+import org.aspectj.lang.ProceedingJoinPoint;
+
 /**
  * 字典翻译接口
  * @author beichenhpy
@@ -12,5 +14,12 @@ public interface DictTranslate {
      * 字典翻译
      * @param result 原返回值
      */
-    void dictTranslate(Object result, Class<?>[] noTranslateClass) throws Exception;
+    Object dictTranslate(Object result, Class<?>[] noTranslateClasses) throws Exception;
+
+    /**
+     * 查看是否不满足条件
+     * @param joinPoint 切点
+     * @return 不满足-true 满足-false
+     */
+    boolean unsatisfied(ProceedingJoinPoint joinPoint);
 }

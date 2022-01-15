@@ -7,10 +7,15 @@ import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateType;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 实体类翻译<p>
@@ -20,6 +25,7 @@ import java.lang.reflect.Modifier;
  * @since 0.0.1
  * <p> 2022/1/14 09:05
  */
+@Slf4j
 public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
     @Override
@@ -28,7 +34,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
     }
 
     @Override
-    protected void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) {
+    protected Object doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
         SimplePlugin simplePlugin = dict.simplePlugin();
         boolean revert = simplePlugin.isRevert();
@@ -68,6 +74,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                 }
             }
         }
+        return current;
     }
 
 
@@ -113,7 +120,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
      * @param fieldValue 当前字段值
      */
     @Override
-    protected void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception{
+    protected Object doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception{
         CommonSignature commonSignature = dict.commonSignature();
         //本地字典表
         Class<?> clazz = commonSignature.type();
@@ -150,8 +157,71 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                 throw new IllegalArgumentException("字典转换失败：请注意传入的[arg]类型是否正确",e);
             }
         }
+        return current;
     }
 
 
+    @Override
+    public Object dictTranslate(Object result, Class<?>[] noTranslateClasses) throws Exception {
+        //进入方法先判断是否满足条件?
+        if (!checkBasic(result) && checkNotInBlackList(result, noTranslateClasses)) {
+            if (result instanceof Collection) {
+                for (Object o : ((Collection<?>) result)) {
+                    if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
+                        dictTranslate(o, noTranslateClasses);
+                    }
+                }
+            } else {
+                //添加类缓存
+                List<Field> fields = getAvailableFields(result, noTranslateClasses);
+                for (Field field : fields) {
+                    try {
+                        field.setAccessible(true);
+                    } catch (InaccessibleObjectException e) {
+                        log.error("由于{}的原因，该类型{}无法进行翻译，" +
+                                        "可以在EnableDictTranslate注解中的noTranslate属性添加不需要翻译的字段，以抑制该报错",
+                                e.getMessage(), field.getType());
+                        continue;
+                    }
+                    //对象key
+                    Object key = ReflectUtil.getFieldValue(result, field.getName());
+                    //key的值不存在，则跳过循环
+                    if (key == null) {
+                        continue;
+                    }
+                    //是否为Collection
+                    if (!checkBasic(key)) {
+                        dictTranslate(key, noTranslateClasses);
+                    } else {
+                        Dict dict = DICT_ANNO_CACHE.get(field);
+                        if (dict == null) {
+                            dict = field.getAnnotation(Dict.class);
+                            DICT_ANNO_CACHE.put(field, dict);
+                        }
+                        if (dict == null) {
+                            continue;
+                        }
+                        String ref = dict.ref();
+                        switch (dict.dictType()) {
+                            case SIMPLE:
+                                result = doSimpleTranslate(result, field, key, ref, dict);
+                                break;
+                            case COMMON:
+                                result = doCommonTranslate(result, field, key, ref, dict);
+                                break;
+                            default:
+                                break;
 
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean unsatisfied(ProceedingJoinPoint joinPoint) {
+        return false;
+    }
 }

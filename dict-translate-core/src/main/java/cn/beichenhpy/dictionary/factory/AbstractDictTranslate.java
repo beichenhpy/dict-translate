@@ -6,11 +6,9 @@ import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -82,7 +80,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param dict       注解
      * @throws Exception 异常
      */
-    protected abstract void doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
+    protected abstract Object doSimpleTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
     /**
      * 处理COMMON类型的翻译
@@ -94,13 +92,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param dict       注解
      * @throws Exception 异常
      */
-    protected abstract void doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
-
-
-    @Override
-    public void dictTranslate(Object result, Class<?>[] noTranslateClasses) {
-        handleTranslate(result, noTranslateClasses);
-    }
+    protected abstract Object doCommonTranslate(Object current, Field field, Object fieldValue, String ref, Dict dict) throws Exception;
 
 
     /**
@@ -176,74 +168,5 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                 .collect(Collectors.toList());
         CLASS_AVAILABLE_FIELDS_CACHE.put(clazz, noAvailableFields);
         return noAvailableFields;
-    }
-
-    /**
-     * 翻译入口
-     *
-     * @param record 翻译实体
-     */
-    @SneakyThrows
-    protected void handleTranslate(Object record, Class<?>[] noTranslateClasses) {
-        //进入方法先判断是否满足条件?
-        if (!checkBasic(record) && checkNotInBlackList(record, noTranslateClasses)) {
-            if (record instanceof Collection) {
-                for (Object o : ((Collection<?>) record)) {
-                    if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
-                        handleTranslate(o, noTranslateClasses);
-                    }
-                }
-            } else {
-                //添加类缓存
-                List<Field> fields = getAvailableFields(record, noTranslateClasses);
-                for (Field field : fields) {
-                    try {
-                        field.setAccessible(true);
-                    } catch (InaccessibleObjectException e) {
-                        log.error("由于{}的原因，该类型{}无法进行翻译，" +
-                                        "可以在EnableDictTranslate注解中的noTranslate属性添加不需要翻译的字段，以抑制该报错",
-                                e.getMessage(), field.getType());
-                        continue;
-                    }
-                    //对象key
-                    Object key = ReflectUtil.getFieldValue(record, field.getName());
-                    //key的值不存在，则跳过循环
-                    if (key == null) {
-                        continue;
-                    }
-                    //是否为Collection
-                    if (key instanceof Collection) {
-                        for (Object o : ((Collection<?>) key)) {
-                            if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
-                                handleTranslate(o, noTranslateClasses);
-                            }
-                        }
-                    } else {
-                        Dict dict = DICT_ANNO_CACHE.get(field);
-                        if (dict == null) {
-                            dict = field.getAnnotation(Dict.class);
-                            DICT_ANNO_CACHE.put(field, dict);
-                        }
-                        if (dict == null) {
-                            continue;
-                        }
-                        String ref = dict.ref();
-                        switch (dict.dictType()) {
-                            case SIMPLE:
-                                doSimpleTranslate(record, field, key, ref, dict);
-                                break;
-                            case COMMON:
-                                doCommonTranslate(record, field, key, ref, dict);
-                                break;
-                            default:
-                                break;
-
-                        }
-                    }
-                }
-            }
-        }
-
-
     }
 }
