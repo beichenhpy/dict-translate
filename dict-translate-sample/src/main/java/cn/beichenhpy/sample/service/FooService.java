@@ -3,6 +3,7 @@ package cn.beichenhpy.sample.service;
 import cn.beichenhpy.dictionary.EnableDictTranslate;
 import cn.beichenhpy.dictionary.enums.TranslateType;
 import cn.beichenhpy.sample.entity.Home;
+import cn.beichenhpy.sample.entity.StatusEnum;
 import cn.beichenhpy.sample.entity.Student;
 import cn.beichenhpy.sample.entity.Teacher;
 import com.alibaba.fastjson.JSON;
@@ -107,7 +108,7 @@ public class FooService {
     private List<Student> prepare() {
         Map<String, String> map = new HashMap<>();
         map.put("1", "1");
-        Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).homes(Collections.singletonList(Collections.singletonList(Home.builder().address("测试").build()))).build();
+        Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).statusEnum(StatusEnum.AVAILABLE).as(new String[]{"1","2"}).homes(Collections.singletonList(Collections.singletonList(Home.builder().address("测试").build()))).build();
         Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).localDateTimes(Collections.singletonList(LocalDateTime.now())).build();
         Student student = Student.builder().health("10011002").gender(false).status(10041001L).date(new Date()).dates(Collections.singletonList(new Date())).test(map).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
         Student student1 = Student.builder().health("10011005").gender(true).status(10041002L).date(new Date()).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();

@@ -2,6 +2,7 @@ package cn.beichenhpy.sample.entity;
 
 import cn.beichenhpy.dictionary.CommonSignature;
 import cn.beichenhpy.dictionary.Dict;
+import cn.beichenhpy.dictionary.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -33,4 +34,10 @@ public class Teacher {
     private List<LocalDateTime> localDateTimes;
 
     private List<List<Home>> homes;
+
+    private StatusEnum statusEnum;
+
+    private String[] as;
+
+    private SimplePlugin simplePlugin;
 }

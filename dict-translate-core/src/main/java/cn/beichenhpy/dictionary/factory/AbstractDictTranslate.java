@@ -8,6 +8,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
@@ -43,13 +44,13 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected static final Class<?>[] DEFAULT_TRANSLATE_BLACKLIST = {
             //*****************日期类*********************
-            Date.class, Calendar.class, Year.class, Month.class,
-            LocalDate.class, LocalDateTime.class,
+            Date.class, Calendar.class, Year.class
+            , Month.class, LocalDate.class, LocalDateTime.class
             //*****************Map*********************
-            Map.class, HashMap.class, TreeMap.class,
-            Hashtable.class, SortedMap.class, WeakHashMap.class,
+            , Map.class, HashMap.class, TreeMap.class
+            , Hashtable.class, SortedMap.class, WeakHashMap.class
             //*****************Thread*********************
-            ThreadLocal.class
+            , ThreadLocal.class
     };
 
     /**
@@ -141,6 +142,16 @@ public abstract class AbstractDictTranslate implements DictTranslate {
             return false;
         }
         Class<?> type = field.getType();
+        Class<? extends Field> clazz = field.getClass();
+        if (type.isArray() || clazz.isArray()) {
+            return false;
+        }
+        if (type.isAnnotation() || clazz.isAnnotation()) {
+            return false;
+        }
+        if (type.isEnum() || clazz.isEnum()) {
+            return false;
+        }
         return !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, type) && !ArrayUtil.contains(noTranslateClasses, type);
     }
 
