@@ -2,7 +2,6 @@ package cn.beichenhpy.sample.entity;
 
 import cn.beichenhpy.dictionary.CommonSignature;
 import cn.beichenhpy.dictionary.Dict;
-import cn.beichenhpy.dictionary.NeedRecursionTranslate;
 import cn.beichenhpy.dictionary.enums.DictType;
 import cn.beichenhpy.sample.service.FooService;
 import lombok.Data;
@@ -20,7 +19,7 @@ import java.util.Map;
  */
 @Data
 @SuperBuilder
-public class Student implements NeedRecursionTranslate {
+public class Student {
 
     @Dict(dictType = DictType.SIMPLE, ref = "genderDict")
     private Boolean gender;

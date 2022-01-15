@@ -2,7 +2,6 @@ package cn.beichenhpy.dictionary.factory;
 
 import cn.beichenhpy.dictionary.Dict;
 import cn.beichenhpy.dictionary.DictTranslate;
-import cn.beichenhpy.dictionary.NeedRecursionTranslate;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -122,16 +121,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     }
 
     /**
-     * 检查是否需要翻译
-     *
-     * @param key 值
-     * @return 是-true 否-false
-     */
-    protected boolean checkNeedTranslate(Object key) {
-        return key instanceof NeedRecursionTranslate;
-    }
-
-    /**
      * 检查是否不在翻译黑名单中
      *
      * @param record             当前类对象
@@ -193,7 +182,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected void handleTranslate(Object record, Class<?>[] noTranslateClasses) {
         if (record instanceof Collection) {
             for (Object o : ((Collection<?>) record)) {
-                if (checkNotInBlackList(o, noTranslateClasses) && !checkBasic(o)) {
+                if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
                     handleTranslate(o, noTranslateClasses);
                 }
             }
@@ -220,7 +209,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
                     //是否为Collection
                     if (key instanceof Collection) {
                         for (Object o : ((Collection<?>) key)) {
-                            if (checkNotInBlackList(o, noTranslateClasses) && checkNeedTranslate(o)) {
+                            if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
                                 handleTranslate(o, noTranslateClasses);
                             }
                         }

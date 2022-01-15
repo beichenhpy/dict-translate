@@ -35,10 +35,9 @@ import java.lang.annotation.Target;
  * <p>
  * <p>所有需要<t>翻译</t>的实体类，都需要继承<t>NeedTranslate</t>
  * @author beichenhpy
- * @see DictTranslate#dictTranslate(Object)
- * @see NeedRecursionTranslate
- * @since o.0.1
- * @version 0.9.1
+ * @see DictTranslate#dictTranslate(Object, Class[])
+ * @since 0.0.1
+ * @version 0.0.1
  * <p> 2021/9/2 13:15
  */
 @Target(ElementType.FIELD)
