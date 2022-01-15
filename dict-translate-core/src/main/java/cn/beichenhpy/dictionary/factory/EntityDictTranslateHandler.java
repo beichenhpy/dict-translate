@@ -180,7 +180,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                     } catch (InaccessibleObjectException e) {
                         log.error("由于{}的原因，该类型{}无法进行翻译，" +
                                         "可以在EnableDictTranslate注解中的noTranslate属性添加不需要翻译的字段，以抑制该报错",
-                                e.getMessage(), field.getType());
+                                e.getMessage(), result.getClass());
                         continue;
                     }
                     //对象key

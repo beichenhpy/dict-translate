@@ -1,10 +1,12 @@
 package cn.beichenhpy.sample.controller;
 
+import cn.beichenhpy.dictionary.EnableDictTranslate;
 import cn.beichenhpy.sample.entity.Student;
 import cn.beichenhpy.sample.service.FooService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +38,7 @@ public class FooController {
 
 
     @GetMapping("/test1")
+    @EnableDictTranslate(noTranslate = {HttpStatus.class})
     public ResponseEntity<List<Student>> test1() {
         List<Student> test = fooService.test1();
         return ResponseEntity.ok(test);

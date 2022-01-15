@@ -32,7 +32,7 @@ public class FooService {
     }
 
 
-    @EnableDictTranslate(mode = TranslateType.ENTITY)
+//    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public List<Student> test1() {
         return prepare();
     }
