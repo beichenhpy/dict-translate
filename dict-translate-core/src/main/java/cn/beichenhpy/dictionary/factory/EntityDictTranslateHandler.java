@@ -71,7 +71,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                         field.setAccessible(true);
                     } catch (Exception e) {
                         log.warn("由于{}的原因,跳过对{}的翻译," +
-                                        "可以在EnableDictTranslate注解中的noTranslate属性添加{}字段以抑制警告",
+                                        "可以在EnableDictTranslate注解中的ignore属性添加{}字段以抑制警告",
                                 e.getMessage(), result.getClass().getName(), result.getClass());
                         continue;
                     }
