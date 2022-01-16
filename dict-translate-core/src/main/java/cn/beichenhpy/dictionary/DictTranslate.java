@@ -13,14 +13,7 @@ public interface DictTranslate {
     /**
      * 字典翻译,需要实现DictType类型的翻译
      * @see cn.beichenhpy.dictionary.enums.DictType
-     * @param result 原返回值
-     */
-    Object dictTranslate(Object result) throws Exception;
-
-    /**
-     * 查看是否不满足条件
      * @param joinPoint 切点
-     * @return 不满足-true 满足-false
      */
-    boolean unsatisfied(ProceedingJoinPoint joinPoint);
+    Object dictTranslate(ProceedingJoinPoint joinPoint) throws Throwable;
 }

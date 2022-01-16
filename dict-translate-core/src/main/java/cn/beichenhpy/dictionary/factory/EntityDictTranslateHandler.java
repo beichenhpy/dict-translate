@@ -1,4 +1,4 @@
-package cn.beichenhpy.dictionary;
+package cn.beichenhpy.dictionary.factory;
 
 import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
 import cn.beichenhpy.dictionary.annotation.Dict;
@@ -31,30 +31,29 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
     @Override
     protected void registerHandler() {
-        TRANSLATE_HANDLERS.put(TranslateType.ENTITY, this);
+        registerHandler(TranslateType.ENTITY);
+    }
+
+    @Override
+    protected boolean preCheck(ProceedingJoinPoint point) throws Throwable {
+        return true;
     }
 
 
     @Override
-    public boolean unsatisfied(ProceedingJoinPoint joinPoint) {
-        return false;
-    }
-
-
-    @Override
-    public Object dictTranslate(Object result) throws Exception {
+    public Object translate(Object result) throws Exception {
         Class<?>[] noTranslateClasses = NO_TRANSLATE_CLASS_HOLDER.get();
         //进入方法先判断是否满足条件?
         if (!checkBasic(result) && checkNotInBlackList(result, noTranslateClasses)) {
             if (result instanceof Collection) {
                 for (Object o : ((Collection<?>) result)) {
                     if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
-                        dictTranslate(o);
+                        translate(o);
                     }
                 }
             } else {
                 //添加类缓存
-                List<Field> fields = getAvailableFields(result);
+                List<Field> fields = getAvailableFields(result, noTranslateClasses);
                 for (Field field : fields) {
                     //fix 高版本会出现InaccessibleObjectException
                     try {
@@ -73,7 +72,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                     }
                     //是否为基础类型
                     if (!checkBasic(key)) {
-                        dictTranslate(key);
+                        translate(key);
                     } else {
                         Dict dict = DICT_ANNO_CACHE.get(field);
                         if (dict == null) {

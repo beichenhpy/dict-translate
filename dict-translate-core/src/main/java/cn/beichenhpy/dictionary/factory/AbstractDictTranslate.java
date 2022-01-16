@@ -1,12 +1,15 @@
-package cn.beichenhpy.dictionary;
+package cn.beichenhpy.dictionary.factory;
 
+import cn.beichenhpy.dictionary.DictTranslate;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import cn.beichenhpy.dictionary.util.TranslateHolder;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -21,7 +24,7 @@ import java.util.stream.Collectors;
 
 /**
  * 翻译抽象接口，主要提供一些方法
- * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #dictTranslate(Object)} 即可
+ * <p>如需自定义处理方法，则继承该抽象类，实现 {@link #registerHandler()} 和 {@link #translate(Object)}} 即可
  *
  * @author beichenhpy
  * @version 0.0.1
@@ -37,7 +40,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     public AbstractDictTranslate() {
         registerHandler();
-        log.trace("register success, current handlers {}", TRANSLATE_HANDLERS);
+        log.trace("{} register success, current handlers {}", this.getClass() ,TRANSLATE_HANDLERS);
     }
 
     /**
@@ -66,6 +69,11 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected static final SimpleCache<Field, Dict> DICT_ANNO_CACHE = new SimpleCache<>();
 
     /**
+     * 字段值对应的类的可用字段集合缓存
+     */
+    protected static final SimpleCache<Class<?>, List<Field>> AVAILABLE_FIELD_CACHE = new SimpleCache<>();
+
+    /**
      * 不进行翻译的类，用户输入
      *
      * @see EnableDictTranslate#noTranslate()
@@ -73,14 +81,62 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected static final ThreadLocal<Class<?>[]> NO_TRANSLATE_CLASS_HOLDER = new InheritableThreadLocal<>();
 
     /**
-     * 字段值对应的类的可用字段集合缓存
-     */
-    protected static final SimpleCache<Class<?>, List<Field>> AVAILABLE_FIELD_CACHE = new SimpleCache<>();
-
-    /**
      * 将处理器存放到TRANSLATE_HANDLERS中
      */
     protected abstract void registerHandler();
+
+    /**
+     * 将处理器存放到TRANSLATE_HANDLERS中
+     * @param type 类型
+     */
+    protected void registerHandler(String type){
+        TRANSLATE_HANDLERS.put(type, this);
+    }
+
+
+    /**
+     * 预检查
+     * @param point 切点
+     * @return 返回是否满足
+     * @throws Throwable 异常
+     */
+    protected abstract boolean preCheck(ProceedingJoinPoint point) throws Throwable;
+
+    /**
+     * 真正的翻译
+     * @param result 返回值
+     * @return 翻译后的返回值
+     * @throws Throwable 异常
+     */
+    protected abstract Object translate(Object result) throws Throwable;
+
+    /**
+     * 设置用户传入的不需要翻译的类
+     * @param joinPoint 切点
+     * @throws Exception 异常
+     */
+    protected void setNoTranslateClassHolder(ProceedingJoinPoint joinPoint) throws Exception {
+        NO_TRANSLATE_CLASS_HOLDER.set(TranslateHolder.getEnableDictTranslate(joinPoint).noTranslate());
+    }
+
+
+    /**
+     * 翻译方法<p>
+     * 实现接口的方法，然后自定义
+     * @param joinPoint 切点
+     * @return 返回翻译后的值
+     * @throws Throwable 异常
+     */
+    @Override
+    public Object dictTranslate(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object result = joinPoint.proceed();
+        setNoTranslateClassHolder(joinPoint);
+        //预检查
+        if (preCheck(joinPoint)) {
+            result = translate(result);
+        }
+        return result;
+    }
 
     /**
      * 检查是否为basic/String
@@ -161,18 +217,31 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param record 实体
      * @return 返回字段数组
      */
-    protected List<Field> getAvailableFields(Object record) {
+    protected List<Field> getAvailableFields(Object record, Class<?>[] noTranslateClasses) {
         Class<?> clazz = record.getClass();
         List<Field> fields = AVAILABLE_FIELD_CACHE.get(clazz);
         if (fields != null) {
             return fields;
         }
-        Class<?>[] noTranslateClasses = NO_TRANSLATE_CLASS_HOLDER.get();
         Field[] allFields = ReflectUtil.getFields(clazz);
         fields = Arrays.stream(allFields)
                 .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
                 .collect(Collectors.toList());
         AVAILABLE_FIELD_CACHE.put(clazz, fields);
         return fields;
+    }
+
+    /**
+     * 获取Handler
+     * @param type 类型
+     * @return 返回处理器
+     */
+    public static DictTranslate getHandler(String type) {
+        for (Map.Entry<String, DictTranslate> entry : TRANSLATE_HANDLERS.entrySet()) {
+            if (entry.getKey().equals(type)) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 }

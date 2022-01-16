@@ -38,7 +38,7 @@ public class FooController {
 
 
     @GetMapping("/test1")
-    @EnableDictTranslate(noTranslate = {HttpStatus.class})
+    @EnableDictTranslate(mode = "JSON",noTranslate = {HttpStatus.class})
     public ResponseEntity<List<Student>> test1() {
         List<Student> test = fooService.test1();
         return ResponseEntity.ok(test);
