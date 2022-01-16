@@ -60,7 +60,7 @@ public class TranslateHolder {
         //通过目标类反射获取方法对象
         Method method = ReflectUtil.getMethod(clazz, methodSignature.getName(), methodSignature.getParameterTypes());
         if (method == null){
-            throw new Exception("no such method");//should not do this
+            throw new NoSuchMethodException("no such method");//should not do this
         }
         EnableDictTranslate enableDictTranslate;
         //尝试缓存获取
@@ -69,7 +69,7 @@ public class TranslateHolder {
             //尝试反射获取
             enableDictTranslate = method.getAnnotation(EnableDictTranslate.class);
             if (enableDictTranslate == null){
-                throw new Exception("no such annotation");//should not do this
+                throw new ReflectiveOperationException("no such annotation");//should not do this
             }else {
                 METHOD_ENABLE_DICT_TRANSLATE_CACHE.put(method, enableDictTranslate);
             }
