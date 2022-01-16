@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2022-2032 Pengyu Han
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package cn.beichenhpy.dictionary.factory;
 
 import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
@@ -52,13 +77,13 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
 
     @Override
-    public Object translate(Object result) throws Exception {
+    public Object translate(Object result) {
         Class<?>[] ignoreClasses = IGNORE_CLASSES_HOLDER.get();
         //进入方法先判断是否满足条件?
-        if (!checkBasic(result) && checkNotInBlackList(result, ignoreClasses)) {
+        if (checkNonBasicOrString(result) && checkNotInBlackList(result, ignoreClasses)) {
             if (result instanceof Collection) {
                 for (Object o : ((Collection<?>) result)) {
-                    if (!checkBasic(o) && checkNotInBlackList(o, ignoreClasses)) {
+                    if (checkNonBasicOrString(o) && checkNotInBlackList(o, ignoreClasses)) {
                         translate(o);
                     }
                 }
@@ -82,7 +107,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
                         continue;
                     }
                     //是否为基础类型
-                    if (!checkBasic(key)) {
+                    if (checkNonBasicOrString(key)) {
                         translate(key);
                     } else {
                         Dict dict = DICT_ANNO_CACHE.get(field);
@@ -194,7 +219,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
      * @param current    当前实体类
      * @param fieldValue 当前字段值
      */
-    protected void doCustomizeTranslate(Object current, Object fieldValue, String ref, Dict dict) throws Exception {
+    protected void doCustomizeTranslate(Object current, Object fieldValue, String ref, Dict dict) {
         CustomizeSignature customizeSignature = dict.commonSignature();
         //本地字典表
         Class<?> clazz = customizeSignature.type();
