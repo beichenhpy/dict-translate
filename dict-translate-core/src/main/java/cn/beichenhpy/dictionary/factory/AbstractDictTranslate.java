@@ -76,9 +76,9 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     /**
      * 不进行翻译的类，用户输入
      *
-     * @see EnableDictTranslate#noTranslate()
+     * @see EnableDictTranslate#ignore()
      */
-    protected static final ThreadLocal<Class<?>[]> NO_TRANSLATE_CLASS_HOLDER = new InheritableThreadLocal<>();
+    protected static final ThreadLocal<Class<?>[]> IGNORE_CLASSES_HOLDER = new InheritableThreadLocal<>();
 
     /**
      * 将处理器存放到TRANSLATE_HANDLERS中
@@ -115,8 +115,8 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param joinPoint 切点
      * @throws Exception 异常
      */
-    protected void setNoTranslateClassHolder(ProceedingJoinPoint joinPoint) throws Exception {
-        NO_TRANSLATE_CLASS_HOLDER.set(TranslateHolder.getEnableDictTranslate(joinPoint).noTranslate());
+    protected void setIgnoreClassHolder(ProceedingJoinPoint joinPoint) throws Exception {
+        IGNORE_CLASSES_HOLDER.set(TranslateHolder.getEnableDictTranslate(joinPoint).ignore());
     }
 
 
@@ -130,7 +130,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     @Override
     public Object dictTranslate(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        setNoTranslateClassHolder(joinPoint);
+        setIgnoreClassHolder(joinPoint);
         //预检查
         if (preCheck(joinPoint)) {
             result = translate(result);
@@ -176,10 +176,10 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * 检查字段是否可用
      *
      * @param field              字段
-     * @param noTranslateClasses 黑名单
+     * @param ignoreClasses 黑名单
      * @return 可用返回true 否则返回false
      */
-    protected boolean checkFieldIsAvailable(Field field, Class<?>[] noTranslateClasses) {
+    protected boolean checkFieldIsAvailable(Field field, Class<?>[] ignoreClasses) {
         if (field == null) {
             return false;
         }
@@ -206,8 +206,8 @@ public abstract class AbstractDictTranslate implements DictTranslate {
         }
         return !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, type)
                 && !ArrayUtil.contains(DEFAULT_TRANSLATE_BLACKLIST, declaringClass)
-                && !ArrayUtil.contains(noTranslateClasses, type)
-                && !ArrayUtil.contains(noTranslateClasses, declaringClass);
+                && !ArrayUtil.contains(ignoreClasses, type)
+                && !ArrayUtil.contains(ignoreClasses, declaringClass);
     }
 
 
@@ -217,7 +217,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param record 实体
      * @return 返回字段数组
      */
-    protected List<Field> getAvailableFields(Object record, Class<?>[] noTranslateClasses) {
+    protected List<Field> getAvailableFields(Object record, Class<?>[] ignoreClasses) {
         Class<?> clazz = record.getClass();
         List<Field> fields = AVAILABLE_FIELD_CACHE.get(clazz);
         if (fields != null) {
@@ -225,7 +225,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
         }
         Field[] allFields = ReflectUtil.getFields(clazz);
         fields = Arrays.stream(allFields)
-                .filter(field -> checkFieldIsAvailable(field, noTranslateClasses))
+                .filter(field -> checkFieldIsAvailable(field, ignoreClasses))
                 .collect(Collectors.toList());
         AVAILABLE_FIELD_CACHE.put(clazz, fields);
         return fields;

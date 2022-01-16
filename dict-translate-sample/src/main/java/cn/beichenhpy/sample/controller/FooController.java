@@ -31,6 +31,7 @@ public class FooController {
     private FooService fooService;
 
     @GetMapping("/test")
+    @EnableDictTranslate
     public ResponseEntity<IPage<Student>> test() {
         IPage<Student> test = fooService.test();
         return ResponseEntity.ok(test);
@@ -38,7 +39,7 @@ public class FooController {
 
 
     @GetMapping("/test1")
-    @EnableDictTranslate(mode = "JSON",noTranslate = {HttpStatus.class})
+    @EnableDictTranslate(mode = "JSON", ignore = {HttpStatus.class})
     public ResponseEntity<List<Student>> test1() {
         List<Student> test = fooService.test1();
         return ResponseEntity.ok(test);

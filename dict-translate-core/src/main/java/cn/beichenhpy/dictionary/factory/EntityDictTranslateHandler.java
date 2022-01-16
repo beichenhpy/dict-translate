@@ -42,18 +42,18 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
     @Override
     public Object translate(Object result) throws Exception {
-        Class<?>[] noTranslateClasses = NO_TRANSLATE_CLASS_HOLDER.get();
+        Class<?>[] ignoreClasses = IGNORE_CLASSES_HOLDER.get();
         //进入方法先判断是否满足条件?
-        if (!checkBasic(result) && checkNotInBlackList(result, noTranslateClasses)) {
+        if (!checkBasic(result) && checkNotInBlackList(result, ignoreClasses)) {
             if (result instanceof Collection) {
                 for (Object o : ((Collection<?>) result)) {
-                    if (!checkBasic(o) && checkNotInBlackList(o, noTranslateClasses)) {
+                    if (!checkBasic(o) && checkNotInBlackList(o, ignoreClasses)) {
                         translate(o);
                     }
                 }
             } else {
                 //添加类缓存
-                List<Field> fields = getAvailableFields(result, noTranslateClasses);
+                List<Field> fields = getAvailableFields(result, ignoreClasses);
                 for (Field field : fields) {
                     //fix 高版本会出现InaccessibleObjectException
                     try {
