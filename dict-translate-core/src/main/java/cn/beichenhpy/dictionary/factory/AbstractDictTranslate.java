@@ -2,8 +2,6 @@ package cn.beichenhpy.dictionary.factory;
 
 import cn.beichenhpy.dictionary.DictTranslate;
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.util.TranslateHolder;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -74,13 +72,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     protected static final SimpleCache<Class<?>, List<Field>> AVAILABLE_FIELD_CACHE = new SimpleCache<>();
 
     /**
-     * 不进行翻译的类，用户输入
-     *
-     * @see EnableDictTranslate#ignore()
-     */
-    protected static final ThreadLocal<Class<?>[]> IGNORE_CLASSES_HOLDER = new InheritableThreadLocal<>();
-
-    /**
      * 将处理器存放到TRANSLATE_HANDLERS中
      */
     protected abstract void registerHandler();
@@ -110,14 +101,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected abstract Object translate(Object result) throws Throwable;
 
-    /**
-     * 设置用户传入的不需要翻译的类
-     * @param joinPoint 切点
-     * @throws Exception 异常
-     */
-    protected void setIgnoreClassHolder(ProceedingJoinPoint joinPoint) throws Exception {
-        IGNORE_CLASSES_HOLDER.set(TranslateHolder.getEnableDictTranslate(joinPoint).ignore());
-    }
 
 
     /**
@@ -130,7 +113,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     @Override
     public Object dictTranslate(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        setIgnoreClassHolder(joinPoint);
         //预检查
         if (preCheck(joinPoint)) {
             result = translate(result);

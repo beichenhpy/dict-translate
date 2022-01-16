@@ -2,9 +2,11 @@ package cn.beichenhpy.dictionary.factory;
 
 import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
 import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.annotation.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateType;
+import cn.beichenhpy.dictionary.util.TranslateHolder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,13 @@ import java.util.List;
 @Slf4j
 public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
+    /**
+     * 不进行翻译的类，用户输入
+     *
+     * @see EnableDictTranslate#ignore()
+     */
+    protected static final ThreadLocal<Class<?>[]> IGNORE_CLASSES_HOLDER = new InheritableThreadLocal<>();
+
     @Override
     protected void registerHandler() {
         registerHandler(TranslateType.ENTITY);
@@ -36,6 +45,8 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
     @Override
     protected boolean preCheck(ProceedingJoinPoint point) throws Throwable {
+        //设置用户输入的忽略类
+        IGNORE_CLASSES_HOLDER.set(TranslateHolder.getEnableDictTranslate(point).ignore());
         return true;
     }
 
