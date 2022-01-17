@@ -1,6 +1,7 @@
 package cn.beichenhpy.sample.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -10,7 +11,7 @@ import lombok.experimental.SuperBuilder;
  * <p> 2022/1/14 20:37
  */
 @Data
-@SuperBuilder
+@Accessors(chain = true)
 public class Home {
     private String address;
 }

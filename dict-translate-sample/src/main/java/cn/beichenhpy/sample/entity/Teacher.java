@@ -5,6 +5,7 @@ import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.util.List;
  * <p> 2022/1/14 19:03
  */
 @Data
-@SuperBuilder
+@Accessors(chain = true)
 public class Teacher {
 
     @Dict(dictType = DictType.SIMPLE, ref = "genderDict")

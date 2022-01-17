@@ -33,7 +33,7 @@ public class FooService {
     }
 
 
-//    @EnableDictTranslate(mode = TranslateType.ENTITY)
+    //    @EnableDictTranslate(mode = TranslateType.ENTITY)
     public List<Student> test1() {
         return prepare();
     }
@@ -46,9 +46,28 @@ public class FooService {
 
     @EnableDictTranslate(mode = TranslateType.ENTITY)
     public Student test2() {
-        Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).build();
-        Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).build();
-        return Student.builder().gender(false).status(10041001L).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
+        Teacher teacher1 =
+                new Teacher()
+                        .setGender(true)
+                        .setStatus(10041001L)
+                        .setStatusEnum(StatusEnum.AVAILABLE)
+                        .setAs(new String[]{"1", "2"})
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+
+        Teacher teacher2 =
+                new Teacher()
+                        .setGender(false)
+                        .setStatus(10041002L)
+                        .setStatusEnum(StatusEnum.AVAILABLE)
+                        .setAs(new String[]{"1", "2"})
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+        return new Student()
+                .setDate(new Date())
+                .setDates(Collections.singletonList(new Date()))
+                .setGender(true)
+                .setStatus(10041001L)
+                .setHealth("10011002")
+                .setTeachers(new ArrayList<>(Arrays.asList(teacher1, teacher2)));
     }
 
 
@@ -85,19 +104,40 @@ public class FooService {
     }
 
     @EnableDictTranslate(mode = TranslateType.ENTITY)
-    public JSONObject test10(){
+    public JSONObject test10() {
         String a = "{\"a\":\"a\"}";
         return JSON.parseObject(a);
     }
 
     @EnableDictTranslate
-    public List<Student> bigData(){
+    public List<Student> bigData() {
         Map<String, String> map = new HashMap<>();
         map.put("1", "1");
         List<Student> students = new LinkedList<>();
-        Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).homes(Collections.singletonList(Collections.singletonList(Home.builder().address("测试").build()))).build();
-        Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).localDateTimes(Collections.singletonList(LocalDateTime.now())).build();
-        Student student = Student.builder().health("10011002").gender(false).status(10041001L).date(new Date()).dates(Collections.singletonList(new Date())).test(map).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
+        Teacher teacher1 =
+                new Teacher()
+                        .setGender(true)
+                        .setStatus(10041001L)
+                        .setStatusEnum(StatusEnum.AVAILABLE)
+                        .setAs(new String[]{"1", "2"})
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+
+        Teacher teacher2 =
+                new Teacher()
+                        .setGender(false)
+                        .setStatus(10041002L)
+                        .setStatusEnum(StatusEnum.AVAILABLE)
+                        .setAs(new String[]{"1", "2"})
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+        Student student =
+                new Student()
+                        .setDate(new Date())
+                        .setDates(Collections.singletonList(new Date()))
+                        .setGender(true)
+                        .setStatus(10041001L)
+                        .setHealth("10011002")
+                        .setTest(map)
+                        .setTeachers(new ArrayList<>(Arrays.asList(teacher1, teacher2)));
         for (int i = 0; i < 10_000_00; i++) {
             students.add(student);
         }
@@ -108,14 +148,42 @@ public class FooService {
     private List<Student> prepare() {
         Map<String, String> map = new HashMap<>();
         map.put("1", "1");
-        Teacher teacher1 = Teacher.builder().gender(true).status(10041001L).statusEnum(StatusEnum.AVAILABLE).as(new String[]{"1","2"}).homes(Collections.singletonList(Collections.singletonList(Home.builder().address("测试").build()))).build();
-        Teacher teacher2 = Teacher.builder().gender(false).status(10041002L).localDateTimes(Collections.singletonList(LocalDateTime.now())).build();
-        Student student = Student.builder().health("10011002").gender(false).status(10041001L).date(new Date()).dates(Collections.singletonList(new Date())).test(map).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
-        Student student1 = Student.builder().health("10011005").gender(true).status(10041002L).date(new Date()).teachers(new ArrayList<>(Arrays.asList(teacher1, teacher2))).build();
-        return new ArrayList<>(Arrays.asList(student, student1));
+        Teacher teacher1 =
+                new Teacher()
+                        .setGender(true)
+                        .setStatus(10041001L)
+                        .setStatusEnum(StatusEnum.AVAILABLE)
+                        .setAs(new String[]{"1", "2"})
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+
+        Teacher teacher2 =
+                new Teacher()
+                        .setGender(false)
+                        .setStatus(10041002L)
+                        .setStatusEnum(StatusEnum.AVAILABLE)
+                        .setAs(new String[]{"1", "2"})
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+        Student student =
+                new Student()
+                        .setDate(new Date())
+                        .setDates(Collections.singletonList(new Date()))
+                        .setGender(true)
+                        .setStatus(10041001L)
+                        .setHealth("10011002")
+                        .setTeachers(new ArrayList<>(Arrays.asList(teacher1, teacher2)));
+        Student student2 =
+                new Student()
+                        .setDate(new Date())
+                        .setDates(Collections.singletonList(new Date()))
+                        .setGender(true)
+                        .setStatus(10041001L)
+                        .setHealth("10011002")
+                        .setTest(map)
+                        .setTeachers(new ArrayList<>(Arrays.asList(teacher1, teacher2)));
+        return new ArrayList<>(Arrays.asList(student, student2));
     }
 
-    public String getValue(String key){
+    public String getValue(String key) {
         switch (key) {
             case "10011001":
                 return "健康";
