@@ -49,16 +49,15 @@ import org.aspectj.lang.annotation.Pointcut;
 public class DictAspect {
 
     //切点,需要根据注解位置来修改
-    @Pointcut(value = "@annotation(cn.beichenhpy.dictionary.annotation.EnableDictTranslate)")
-    public void pointCut() {
+    @Pointcut(value = "@annotation(enableDictTranslate)")
+    public void pointCut(EnableDictTranslate enableDictTranslate) {
 
     }
 
-    @Around("pointCut()")
-    public Object parse(ProceedingJoinPoint point) throws Throwable {
+    @Around("pointCut(enableDictTranslate)")
+    public Object parse(ProceedingJoinPoint point, EnableDictTranslate enableDictTranslate) throws Throwable {
         //获取handler
-        DictTranslate handler = AbstractDictTranslate.getHandler(
-                TranslateHolder.getEnableDictTranslate(point).mode());
+        DictTranslate handler = AbstractDictTranslate.getHandler(enableDictTranslate.mode());
         if (handler == null) {
             throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
         }
