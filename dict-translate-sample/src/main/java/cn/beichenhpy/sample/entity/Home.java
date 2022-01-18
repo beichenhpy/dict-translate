@@ -7,7 +7,6 @@ import cn.beichenhpy.dictionary.annotation.plugin.base.StringPlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 /**
  * @author beichenhpy
@@ -19,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Accessors(chain = true)
 public class Home {
 
-    @Dict(dictType = DictType.DB, ref = "provinceText",
+    @Dict(dictType = DictType.DATABASE, ref = "provinceText",
     plugin = @DictPlugin(
             dbPlugin = @DbPlugin(table = "province", code = "code")
     ))

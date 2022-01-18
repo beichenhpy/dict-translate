@@ -48,5 +48,5 @@ public interface DictType {
     /**
      * 数据库类型
      */
-    String DB = "DB";
+    String DATABASE = "DATABASE";
 }
