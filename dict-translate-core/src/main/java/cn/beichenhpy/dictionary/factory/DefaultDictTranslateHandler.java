@@ -32,8 +32,8 @@ import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateHandlerType;
 import cn.beichenhpy.dictionary.util.TranslateHolder;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 
@@ -138,45 +138,52 @@ public class DefaultDictTranslateHandler extends AbstractDictTranslate {
         return result;
     }
 
-    protected void doSimpleTranslate(Object current, Object fieldValue, String ref, Dict dict) {
+
+
+    protected void doSimpleTranslate(Object current, @NonNull Object fieldValue, String ref, Dict dict) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
         SimplePlugin simplePlugin = dict.defaultPlugin().simplePlugin();
         boolean revert = simplePlugin.isRevert();
+        String value = fieldValue.toString();
         if (fieldValue instanceof Boolean) {
-            if (!ObjectUtil.isEmpty(fieldValue)) {
-                if (fieldValue.toString().equals(TranslateConstant.LOWER_TRUE)) {
-                    if (!revert) {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
-                    } else {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
-                    }
-                }
-                if (fieldValue.toString().equals(TranslateConstant.LOWER_FALSE)) {
-                    if (!revert) {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
-                    } else {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
-                    }
-                }
+            switch (value){
+                case TranslateConstant.LOWER_TRUE:
+                    setValueForSimple(revert, current, ref, TranslateConstant.YES, TranslateConstant.NO);
+                    break;
+                case TranslateConstant.LOWER_FALSE:
+                    setValueForSimple(revert, current, ref, TranslateConstant.NO, TranslateConstant.YES);
+                    break;
+                default:
+                    break;
             }
         }
         if (fieldValue instanceof Integer) {
-            if (!ObjectUtil.isEmpty(fieldValue)) {
-                if (fieldValue.toString().equals(TranslateConstant.ONE)) {
-                    if (!revert) {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
-                    } else {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
-                    }
-                }
-                if (fieldValue.toString().equals(TranslateConstant.ZERO)) {
-                    if (!revert) {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.NO);
-                    } else {
-                        ReflectUtil.setFieldValue(current, ref, TranslateConstant.YES);
-                    }
-                }
+            switch (value){
+                case TranslateConstant.ONE:
+                    setValueForSimple(revert, current, ref, TranslateConstant.YES, TranslateConstant.NO);
+                    break;
+                case TranslateConstant.ZERO:
+                    setValueForSimple(revert, current, ref, TranslateConstant.NO, TranslateConstant.YES);
+                    break;
+                default:
+                    break;
             }
+        }
+    }
+
+    /**
+     * 设置字段值SIMPLE模式
+     * @param isRevert 是否翻转
+     * @param current 当前值
+     * @param ref 赋值字段名
+     * @param noRevertValue 未翻转时的值
+     * @param revertValue 翻转后的值
+     */
+    private void setValueForSimple(boolean isRevert, Object current, String ref, String noRevertValue, String revertValue) {
+        if (!isRevert) {
+            ReflectUtil.setFieldValue(current, ref, noRevertValue);
+        } else {
+            ReflectUtil.setFieldValue(current, ref, revertValue);
         }
     }
 
