@@ -25,17 +25,16 @@
 
 package cn.beichenhpy.dictionary.factory;
 
-import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
+import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateHandlerType;
-import cn.beichenhpy.dictionary.util.TranslateHolder;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -43,7 +42,8 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
-import static cn.beichenhpy.dictionary.enums.DictType.*;
+import static cn.beichenhpy.dictionary.enums.DictType.CUSTOMIZE;
+import static cn.beichenhpy.dictionary.enums.DictType.SIMPLE;
 
 /**
  * 实体类翻译<p>
@@ -70,9 +70,9 @@ public class DefaultDictTranslateHandler extends AbstractDictTranslate {
     }
 
     @Override
-    protected boolean preCheck(ProceedingJoinPoint point) throws Throwable {
+    protected boolean preCheck(ResultWrapper resultWrapper) {
         //设置用户输入的忽略类
-        IGNORE_CLASSES_HOLDER.set(TranslateHolder.getEnableDictTranslate(point).ignore());
+        IGNORE_CLASSES_HOLDER.set(resultWrapper.getEnableDictTranslate().ignore());
         return true;
     }
 

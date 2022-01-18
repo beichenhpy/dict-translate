@@ -25,19 +25,26 @@
 
 package cn.beichenhpy.dictionary;
 
+import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import lombok.Data;
+
+import java.lang.reflect.Method;
 
 /**
- * 字典翻译接口
+ * 原始对象包装类
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 09:01
+ * <p> 2022/1/18 23:10
  */
-public interface DictTranslate {
-    /**
-     * 字典翻译,需要实现DictType类型的翻译
-     * @see cn.beichenhpy.dictionary.enums.DictType
-     * @param resultWrapper 结果包装类
-     */
-    Object dictTranslate(ResultWrapper resultWrapper) throws Throwable;
+@Data
+public class ResultWrapper {
+
+    private Object result;
+
+    private Class<?> targetClass;
+
+    private Method targetMethod;
+
+    private EnableDictTranslate enableDictTranslate;
 }

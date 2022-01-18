@@ -1,5 +1,6 @@
 package cn.beichenhpy.sample.service;
 
+import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.factory.AbstractDictTranslate;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
@@ -18,12 +19,12 @@ public class JSONDictTranslateHandler extends AbstractDictTranslate {
     }
 
     @Override
-    protected boolean preCheck(ProceedingJoinPoint point) throws Throwable {
+    protected boolean preCheck(ResultWrapper resultWrapper) {
         return true;
     }
 
     @Override
-    protected Object translate(Object result) throws Throwable {
+    protected Object translate(Object result) {
         return result;
     }
 }

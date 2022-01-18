@@ -23,6 +23,4 @@ public class DictTranslateHandlerConfig {
         return new DictAspect();
     }
 
-
-
 }

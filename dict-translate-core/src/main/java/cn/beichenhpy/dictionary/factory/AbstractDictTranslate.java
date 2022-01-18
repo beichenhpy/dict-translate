@@ -26,13 +26,13 @@
 package cn.beichenhpy.dictionary.factory;
 
 import cn.beichenhpy.dictionary.DictTranslate;
+import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -112,11 +112,11 @@ public abstract class AbstractDictTranslate implements DictTranslate {
 
     /**
      * 预检查
-     * @param point 切点
+     * @param resultWrapper 包装结果类
      * @return 返回是否满足
      * @throws Throwable 异常
      */
-    protected abstract boolean preCheck(ProceedingJoinPoint point) throws Throwable;
+    protected abstract boolean preCheck(ResultWrapper resultWrapper) throws Throwable;
 
     /**
      * 真正的翻译
@@ -131,15 +131,15 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     /**
      * 翻译方法<p>
      * 实现接口的方法，然后自定义
-     * @param joinPoint 切点
+     * @param resultWrapper 包装结果类
      * @return 返回翻译后的值
      * @throws Throwable 异常
      */
     @Override
-    public Object dictTranslate(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object result = joinPoint.proceed();
+    public Object dictTranslate(ResultWrapper resultWrapper) throws Throwable {
+        Object result = resultWrapper.getResult();
         //预检查
-        if (preCheck(joinPoint)) {
+        if (preCheck(resultWrapper)) {
             result = translate(result);
         }
         return result;
