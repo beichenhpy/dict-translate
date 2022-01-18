@@ -33,7 +33,7 @@ public class FooService {
     }
 
 
-    //    @EnableDictTranslate(mode = TranslateType.ENTITY)
+    //    @EnableDictTranslate(mode = TranslateType.DEFAULT)
     public List<Student> test1() {
         return prepare();
     }
@@ -52,7 +52,7 @@ public class FooService {
                         .setStatus(10041001L)
                         .setStatusEnum(StatusEnum.AVAILABLE)
                         .setAs(new String[]{"1", "2"})
-                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setProvince("aa"))));
 
         Teacher teacher2 =
                 new Teacher()
@@ -60,7 +60,7 @@ public class FooService {
                         .setStatus(10041002L)
                         .setStatusEnum(StatusEnum.AVAILABLE)
                         .setAs(new String[]{"1", "2"})
-                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setProvince("aa"))));
         return new Student()
                 .setDate(new Date())
                 .setDates(Collections.singletonList(new Date()))
@@ -120,7 +120,7 @@ public class FooService {
                         .setStatus(10041001L)
                         .setStatusEnum(StatusEnum.AVAILABLE)
                         .setAs(new String[]{"1", "2"})
-                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setProvince("aa"))));
 
         Teacher teacher2 =
                 new Teacher()
@@ -128,7 +128,7 @@ public class FooService {
                         .setStatus(10041002L)
                         .setStatusEnum(StatusEnum.AVAILABLE)
                         .setAs(new String[]{"1", "2"})
-                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setProvince("aa"))));
         Student student =
                 new Student()
                         .setDate(new Date())
@@ -154,7 +154,7 @@ public class FooService {
                         .setStatus(10041001L)
                         .setStatusEnum(StatusEnum.AVAILABLE)
                         .setAs(new String[]{"1", "2"})
-                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setProvince("aa"))));
 
         Teacher teacher2 =
                 new Teacher()
@@ -162,7 +162,7 @@ public class FooService {
                         .setStatus(10041002L)
                         .setStatusEnum(StatusEnum.AVAILABLE)
                         .setAs(new String[]{"1", "2"})
-                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setAddress("aa"))));
+                        .setHomes(Collections.singletonList(Collections.singletonList(new Home().setProvince("aa"))));
         Student student =
                 new Student()
                         .setDate(new Date())

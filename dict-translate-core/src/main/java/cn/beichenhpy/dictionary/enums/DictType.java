@@ -44,4 +44,9 @@ public interface DictType {
      * @see cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin
      */
     String CUSTOMIZE = "CUSTOMIZE";
+
+    /**
+     * 数据库类型
+     */
+    String DB = "DB";
 }
