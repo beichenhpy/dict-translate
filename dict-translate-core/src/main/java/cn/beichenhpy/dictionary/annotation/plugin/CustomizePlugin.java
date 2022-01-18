@@ -23,7 +23,7 @@
  *
  */
 
-package cn.beichenhpy.dictionary.annotation;
+package cn.beichenhpy.dictionary.annotation.plugin;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -31,7 +31,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * CUSTOMIZE情况，方法签名
+ * 字典类型为CUSTOMIZE类型时所用的注解插件
+ * <p>主要提供对应翻译key to value的类、方法、方法参数类型
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
@@ -40,24 +41,27 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
-public @interface CustomizeSignature {
+public @interface CustomizePlugin {
     /**
-     * LOCAL类型时处理
-     * 本地枚举类 Object不处理
-     * @return 返回枚举类
+     *
+     * Object不处理
+     *
+     * @return 返回方法所在类
      */
     Class<?> type() default Object.class;
 
     /**
-     * LOCAL类型时处理
-     * 本地枚举类对应获取value值的方法
+     *
+     * 对应获取value值的方法
+     *
      * @return 返回方法名
      */
     String method() default "";
 
     /**
-     * LOCAL类型时处理
-     * 枚举方法的参数类型 默认String
+     *
+     * 参数类型 默认String
+     *
      * @return 枚举方法的参数类型
      */
     Class<?> arg() default String.class;

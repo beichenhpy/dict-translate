@@ -27,7 +27,8 @@ package cn.beichenhpy.dictionary.annotation;
 
 
 import cn.beichenhpy.dictionary.DictTranslate;
-import cn.beichenhpy.dictionary.enums.DictType;
+import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.annotation.ElementType;
@@ -67,7 +68,7 @@ public @interface Dict {
      * 字典类型
      * @return 字典类型
      */
-    DictType dictType();
+    String dictType();
 
     /**
      * 转换后的字典字段名
@@ -76,15 +77,13 @@ public @interface Dict {
     String ref();
 
     /**
-     * SIMPLE类型时的拓展
-     * @return simple类型拓展
+     * 默认插件
+     * @return Default
      */
-    SimplePlugin simplePlugin() default @SimplePlugin;
-
+    DefaultPlugin defaultPlugin() default @DefaultPlugin;
     /**
-     * CUSTOMIZE模式
-     * <p>传入类、方法、参数即可进行翻译 注解信息
-     * @return 返回本地翻译需要的注解信息
+     * 翻译插件
+     * @return 返回插件
      */
-    CustomizeSignature commonSignature() default @CustomizeSignature;
+    DictPlugin plugin() default @DictPlugin;
 }

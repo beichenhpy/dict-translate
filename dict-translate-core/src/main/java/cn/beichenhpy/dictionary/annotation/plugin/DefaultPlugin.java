@@ -23,25 +23,35 @@
  *
  */
 
-package cn.beichenhpy.dictionary.enums;
+package cn.beichenhpy.dictionary.annotation.plugin;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 字典翻译类型，可自定义，String类型
+ * 默认插件 提供给默认方法使用
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 08:54
+ * <p> 2022/1/18 20:30
  */
-public interface DictType {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({})
+public @interface DefaultPlugin {
     /**
-     * 转换如 Boolean/boolean/Integer/int类型的
-     * true -> 是 false -> 否
-     * 1 -> 是 0 -> 否
+     * simple插件
+     *
+     * @return 默认插件，用户可重写或使用该类型
      */
-    String SIMPLE = "SIMPLE";
+    SimplePlugin simplePlugin() default @SimplePlugin;
+
     /**
-     * 自定义类型，通过自定义方法查询key所对应的value值
-     * @see cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin
+     * CUSTOMIZE插件
+     *
+     * @return 默认为CustomizePlugin
      */
-    String CUSTOMIZE = "CUSTOMIZE";
+    CustomizePlugin customizePlugin() default @CustomizePlugin;
 }

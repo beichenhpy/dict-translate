@@ -1,6 +1,6 @@
 package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.factory.EntityDictTranslateHandler;
+import cn.beichenhpy.dictionary.factory.DefaultDictTranslateHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class DictTranslateHandlerConfig {
     @Bean
     public DictTranslate entityTranslate() {
-        return new EntityDictTranslateHandler();
+        return new DefaultDictTranslateHandler();
     }
 
 

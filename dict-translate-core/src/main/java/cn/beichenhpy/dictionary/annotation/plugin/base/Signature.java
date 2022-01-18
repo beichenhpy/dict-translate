@@ -23,25 +23,36 @@
  *
  */
 
-package cn.beichenhpy.dictionary.enums;
+package cn.beichenhpy.dictionary.annotation.plugin.base;
 
 /**
- * 字典翻译类型，可自定义，String类型
+ * 方法签名注解
+ *
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 08:54
+ * <p> 2022/1/18 19:48
  */
-public interface DictType {
+public @interface Signature {
+
     /**
-     * 转换如 Boolean/boolean/Integer/int类型的
-     * true -> 是 false -> 否
-     * 1 -> 是 0 -> 否
+     * 类
+     *
+     * @return 类
      */
-    String SIMPLE = "SIMPLE";
+    Class<?> type() default Object.class;
+
     /**
-     * 自定义类型，通过自定义方法查询key所对应的value值
-     * @see cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin
+     * 方法名
+     *
+     * @return 方法名
      */
-    String CUSTOMIZE = "CUSTOMIZE";
+    String method() default "";
+
+    /**
+     * 参数类型数组
+     *
+     * @return 参数类型数组
+     */
+    Class<?>[] args() default {};
 }

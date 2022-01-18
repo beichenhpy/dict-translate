@@ -23,7 +23,7 @@
  *
  */
 
-package cn.beichenhpy.dictionary.annotation;
+package cn.beichenhpy.dictionary.annotation.plugin;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -31,6 +31,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 所需翻译的字典类型为SIMPLE类型时所用的注解插件
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1

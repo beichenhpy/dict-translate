@@ -25,23 +25,17 @@
 
 package cn.beichenhpy.dictionary.enums;
 
+
+
 /**
- * 字典翻译类型，可自定义，String类型
+ * 字典翻译处理器类型，主要进行翻译的处理器
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 08:54
+ * @see cn.beichenhpy.dictionary.factory.DefaultDictTranslateHandler
+ * <p> 2022/1/14 08:55
  */
-public interface DictType {
-    /**
-     * 转换如 Boolean/boolean/Integer/int类型的
-     * true -> 是 false -> 否
-     * 1 -> 是 0 -> 否
-     */
-    String SIMPLE = "SIMPLE";
-    /**
-     * 自定义类型，通过自定义方法查询key所对应的value值
-     * @see cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin
-     */
-    String CUSTOMIZE = "CUSTOMIZE";
+public interface TranslateHandlerType {
+
+    String DEFAULT = "DEFAULT";
 }

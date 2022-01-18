@@ -23,19 +23,44 @@
  *
  */
 
-package cn.beichenhpy.dictionary.enums;
+package cn.beichenhpy.dictionary.annotation.plugin;
 
-
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 字典转换类型
- * 如果有其他类型，可以继承此接口
+ * 字典类型为数据库是使用的注解扩展
+ * <P>常用的基本为数据库表名、类别名、代码名
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 08:55
+ * <p> 2022/1/18 19:45
  */
-public interface TranslateType {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({})
+public @interface DbPlugin {
 
-    String ENTITY = "ENTITY";
+    /**
+     * 数据表
+     *
+     * @return 数据表
+     */
+    String table() default "";
+
+    /**
+     * 类型
+     *
+     * @return 类型
+     */
+    String type() default "";
+
+    /**
+     * 代码
+     *
+     * @return 代码
+     */
+    String code() default "";
 }

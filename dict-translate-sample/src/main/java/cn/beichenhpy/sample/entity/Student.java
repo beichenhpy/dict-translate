@@ -1,12 +1,12 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
+import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import cn.beichenhpy.sample.service.FooService;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 import java.util.List;
@@ -28,13 +28,17 @@ public class Student {
     private String genderDict;
 
     @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict",
-            commonSignature = @CustomizeSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
+            defaultPlugin = @DefaultPlugin(
+                    customizePlugin = @CustomizePlugin(type = StatusEnum.class, method = "getValue", arg = Long.class)
+            ))
     private Long status;
 
     private String statusDict;
 
     @Dict(dictType = DictType.CUSTOMIZE, ref = "healthText",
-            commonSignature = @CustomizeSignature(type = FooService.class, method = "getValue", arg = String.class))
+            defaultPlugin = @DefaultPlugin(
+                    customizePlugin = @CustomizePlugin(type = FooService.class, method = "getValue", arg = String.class)
+            ))
     private String health;
 
     private String healthText;

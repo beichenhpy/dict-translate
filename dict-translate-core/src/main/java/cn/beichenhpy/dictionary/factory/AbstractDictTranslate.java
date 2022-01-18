@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  * @author beichenhpy
  * @version 0.0.1
  * <p> 2022/1/13 13:33
- * @see EntityDictTranslateHandler
+ * @see DefaultDictTranslateHandler
  * @since 0.0.1
  */
 @Slf4j

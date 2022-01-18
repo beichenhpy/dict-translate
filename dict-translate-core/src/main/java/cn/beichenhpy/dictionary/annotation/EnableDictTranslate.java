@@ -25,7 +25,7 @@
 
 package cn.beichenhpy.dictionary.annotation;
 
-import cn.beichenhpy.dictionary.enums.TranslateType;
+import cn.beichenhpy.dictionary.enums.TranslateHandlerType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -57,7 +57,7 @@ public @interface EnableDictTranslate {
      *
      * @return 翻译模式
      */
-    String mode() default TranslateType.ENTITY;
+    String mode() default TranslateHandlerType.DEFAULT;
 
     /**
      * 忽略翻译类，用于抑制警告

@@ -1,12 +1,13 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
+import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.annotation.SimplePlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,8 +27,11 @@ public class Teacher {
 
     private String genderDict;
 
-    @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict",
-            commonSignature = @CustomizeSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
+    @Dict(dictType = DictType.CUSTOMIZE,
+            ref = "statusDict",
+            defaultPlugin = @DefaultPlugin(
+                    customizePlugin = @CustomizePlugin(type = StatusEnum.class, method = "getValue", arg = Long.class)
+            ))
     private Long status;
 
     private String statusDict;

@@ -25,12 +25,12 @@
 
 package cn.beichenhpy.dictionary.factory;
 
-import cn.beichenhpy.dictionary.annotation.CustomizeSignature;
+import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.annotation.SimplePlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
-import cn.beichenhpy.dictionary.enums.TranslateType;
+import cn.beichenhpy.dictionary.enums.TranslateHandlerType;
 import cn.beichenhpy.dictionary.util.TranslateHolder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -43,6 +43,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
+import static cn.beichenhpy.dictionary.enums.DictType.*;
 
 /**
  * 实体类翻译<p>
@@ -54,7 +55,7 @@ import java.util.List;
  * <p> 2022/1/14 09:05
  */
 @Slf4j
-public class EntityDictTranslateHandler extends AbstractDictTranslate {
+public class DefaultDictTranslateHandler extends AbstractDictTranslate {
 
     /**
      * 不进行翻译的类，用户输入
@@ -65,7 +66,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
     @Override
     protected void registerHandler() {
-        registerHandler(TranslateType.ENTITY);
+        registerHandler(TranslateHandlerType.DEFAULT);
     }
 
     @Override
@@ -139,7 +140,7 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
 
     protected void doSimpleTranslate(Object current, Object fieldValue, String ref, Dict dict) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
-        SimplePlugin simplePlugin = dict.simplePlugin();
+        SimplePlugin simplePlugin = dict.defaultPlugin().simplePlugin();
         boolean revert = simplePlugin.isRevert();
         if (fieldValue instanceof Boolean) {
             if (!ObjectUtil.isEmpty(fieldValue)) {
@@ -220,16 +221,16 @@ public class EntityDictTranslateHandler extends AbstractDictTranslate {
      * @param fieldValue 当前字段值
      */
     protected void doCustomizeTranslate(Object current, Object fieldValue, String ref, Dict dict) {
-        CustomizeSignature customizeSignature = dict.commonSignature();
+        CustomizePlugin customizePlugin = dict.defaultPlugin().customizePlugin();
         //本地字典表
-        Class<?> clazz = customizeSignature.type();
+        Class<?> clazz = customizePlugin.type();
         //不为默认Object则进行转换
         if (!clazz.equals(Object.class)) {
-            String methodName = customizeSignature.method();
+            String methodName = customizePlugin.method();
             if (methodName.isEmpty()) {
                 throw new IllegalArgumentException("字典转换失败：未传入[method]");
             }
-            Class<?> parameterType = customizeSignature.arg();
+            Class<?> parameterType = customizePlugin.arg();
             Method translateMethod = ReflectUtil.getMethod(clazz, methodName, parameterType);
             if (translateMethod == null) {
                 throw new IllegalArgumentException("字典转换失败：检查传入的[method]是否存在");
