@@ -1,8 +1,7 @@
 package cn.beichenhpy.sample.service;
 
 import cn.beichenhpy.dictionary.ResultWrapper;
-import cn.beichenhpy.dictionary.factory.AbstractDictTranslate;
-import org.aspectj.lang.ProceedingJoinPoint;
+import cn.beichenhpy.dictionary.factory.AbstractTranslateHandler;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
  * <p> 2022/1/16 14:20
  */
 @Component
-public class JSONDictTranslateHandler extends AbstractDictTranslate {
+public class JSONTranslateHandler extends AbstractTranslateHandler {
     @Override
     protected void registerHandler() {
         registerHandler("JSON");

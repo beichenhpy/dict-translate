@@ -23,46 +23,21 @@
  *
  */
 
-package cn.beichenhpy.dictionary.annotation;
+package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.enums.TranslateStrategy;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
- * 在哪个方法启用翻译
- * <pre>
- *     <t>@EnableDictTranslate</t>(type = TranslateType.ENTITY)
- *     public IPage&lt;Student&gt; test() {
- *         IPage&lt;Student&gt; page = new Page<>();
- *         page.setRecords(prepare());
- *         return page;
- *     }
- * </pre>
+ * 字典翻译接口
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 08:57
+ * <p> 2022/1/14 09:01
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface EnableDictTranslate {
-
+public interface TranslateHandler {
     /**
-     * JSON 直接操作返回值，添加字段
-     * ENTITY 对已经有的字段赋值
-     *
-     * @return 翻译模式
+     * 字典翻译,需要实现DictType类型的翻译
+     * @see cn.beichenhpy.dictionary.enums.DictType
+     * @param resultWrapper 结果包装类
      */
-    String mode() default TranslateStrategy.DEFAULT;
-
-    /**
-     * 忽略翻译类，用于抑制警告
-     * @return 返回不需要翻译的类数组
-     */
-    Class<?>[] ignore() default {};
-
+    Object dictTranslate(ResultWrapper resultWrapper) throws Throwable;
 }

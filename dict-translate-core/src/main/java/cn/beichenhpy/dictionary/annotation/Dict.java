@@ -26,7 +26,7 @@
 package cn.beichenhpy.dictionary.annotation;
 
 
-import cn.beichenhpy.dictionary.DictTranslate;
+import cn.beichenhpy.dictionary.TranslateHandler;
 import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
@@ -55,7 +55,7 @@ import java.lang.annotation.Target;
  * </pre>
  * <p>
  * @author beichenhpy
- * @see DictTranslate#dictTranslate(ResultWrapper)
+ * @see TranslateHandler#dictTranslate(ResultWrapper)
  * @since 0.0.1
  * @version 0.0.1
  * <p> 2021/9/2 13:15

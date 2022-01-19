@@ -27,7 +27,7 @@ package cn.beichenhpy.dictionary;
 
 
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.factory.AbstractDictTranslate;
+import cn.beichenhpy.dictionary.factory.AbstractTranslateHandler;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ import java.lang.reflect.Method;
  * 字典翻译切面
  * @version 0.0.1
  * <p> 2022/1/12 10:42
- * @see DictTranslate
+ * @see TranslateHandler
  * @since 0.0.1
  */
 @Aspect
@@ -62,7 +62,7 @@ public class DictAspect {
     @Around("pointCut(enableDictTranslate)")
     public Object parse(ProceedingJoinPoint point, EnableDictTranslate enableDictTranslate) throws Throwable {
         //获取handler
-        DictTranslate handler = AbstractDictTranslate.getHandler(enableDictTranslate.mode());
+        TranslateHandler handler = AbstractTranslateHandler.getHandler(enableDictTranslate.mode());
         if (handler == null) {
             throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
         }

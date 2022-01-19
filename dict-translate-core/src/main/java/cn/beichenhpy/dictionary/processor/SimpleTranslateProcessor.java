@@ -23,21 +23,13 @@
  *
  */
 
-package cn.beichenhpy.dictionary;
-
+package cn.beichenhpy.dictionary.processor;
 
 /**
- * 字典翻译接口
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 09:01
+ * <p> 2022/1/19 19:16
  */
-public interface DictTranslate {
-    /**
-     * 字典翻译,需要实现DictType类型的翻译
-     * @see cn.beichenhpy.dictionary.enums.DictType
-     * @param resultWrapper 结果包装类
-     */
-    Object dictTranslate(ResultWrapper resultWrapper) throws Throwable;
+public interface SimpleTranslateProcessor extends TranslateProcessor{
 }

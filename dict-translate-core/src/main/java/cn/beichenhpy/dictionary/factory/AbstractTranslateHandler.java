@@ -25,7 +25,7 @@
 
 package cn.beichenhpy.dictionary.factory;
 
-import cn.beichenhpy.dictionary.DictTranslate;
+import cn.beichenhpy.dictionary.TranslateHandler;
 import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.hutool.core.lang.SimpleCache;
@@ -52,16 +52,16 @@ import java.util.stream.Collectors;
  * @author beichenhpy
  * @version 0.0.1
  * <p> 2022/1/13 13:33
- * @see DefaultDictTranslateHandler
+ * @see DefaultTranslateHandler
  * @since 0.0.1
  */
 @Slf4j
-public abstract class AbstractDictTranslate implements DictTranslate {
+public abstract class AbstractTranslateHandler implements TranslateHandler {
 
     /**
      * 构造函数默认调用子类实现的add方法，将自身注册到TRANSLATE_HANDLERS中
      */
-    public AbstractDictTranslate() {
+    public AbstractTranslateHandler() {
         registerHandler();
         log.trace("{} register success, current handlers {}", this.getClass() ,TRANSLATE_HANDLERS);
     }
@@ -85,7 +85,7 @@ public abstract class AbstractDictTranslate implements DictTranslate {
     /**
      * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
      */
-    protected static final Map<String, DictTranslate> TRANSLATE_HANDLERS = new HashMap<>();
+    protected static final Map<String, TranslateHandler> TRANSLATE_HANDLERS = new HashMap<>();
     /**
      * Dict注解信息
      */
@@ -153,17 +153,6 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      */
     protected boolean checkNonBasicOrString(Object result) {
         return !ClassUtil.isBasicType(result.getClass()) && !String.class.equals(result.getClass());
-    }
-
-    /**
-     * 检查注解上的类是否和字段值得一致
-     *
-     * @param fieldValue 字段值
-     * @param arg        注解参数类型
-     * @return 是 true 否 false
-     */
-    protected boolean checkFieldClassSameAsAnno(Object fieldValue, Class<?> arg) {
-        return arg.equals(fieldValue.getClass());
     }
 
     /**
@@ -243,8 +232,8 @@ public abstract class AbstractDictTranslate implements DictTranslate {
      * @param type 类型
      * @return 返回处理器
      */
-    public static DictTranslate getHandler(String type) {
-        for (Map.Entry<String, DictTranslate> entry : TRANSLATE_HANDLERS.entrySet()) {
+    public static TranslateHandler getHandler(String type) {
+        for (Map.Entry<String, TranslateHandler> entry : TRANSLATE_HANDLERS.entrySet()) {
             if (entry.getKey().equals(type)) {
                 return entry.getValue();
             }

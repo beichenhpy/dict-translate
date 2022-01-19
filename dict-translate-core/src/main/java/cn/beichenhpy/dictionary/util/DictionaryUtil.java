@@ -23,19 +23,24 @@
  *
  */
 
-package cn.beichenhpy.dictionary.enums;
-
-
+package cn.beichenhpy.dictionary.util;
 
 /**
- * 字典翻译处理器类型，主要进行翻译的处理器
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * @see cn.beichenhpy.dictionary.factory.DefaultDictTranslateHandler
- * <p> 2022/1/14 08:55
+ * <p> 2022/1/19 19:03
  */
-public interface TranslateHandlerType {
+public class DictionaryUtil {
 
-    String DEFAULT = "DEFAULT";
+    /**
+     * 检查注解上的类是否和字段值得一致
+     *
+     * @param fieldValue 字段值
+     * @param arg        注解参数类型
+     * @return 是 true 否 false
+     */
+    public static boolean checkFieldClassSameAsAnno(Object fieldValue, Class<?> arg) {
+        return arg.equals(fieldValue.getClass());
+    }
 }
