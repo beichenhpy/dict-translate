@@ -71,8 +71,14 @@ public class DefaultDictTranslateHandler extends AbstractDictTranslate {
 
     @Override
     protected boolean preCheck(ResultWrapper resultWrapper) {
+        if (resultWrapper == null){
+            throw new IllegalArgumentException("未传入传入参数");
+        }
+        //fix:增加判空，手动调用时无法初始化注解信息
+        if (resultWrapper.getEnableDictTranslate() != null){
+            IGNORE_CLASSES_HOLDER.set(resultWrapper.getEnableDictTranslate().ignore());
+        }
         //设置用户输入的忽略类
-        IGNORE_CLASSES_HOLDER.set(resultWrapper.getEnableDictTranslate().ignore());
         return true;
     }
 
