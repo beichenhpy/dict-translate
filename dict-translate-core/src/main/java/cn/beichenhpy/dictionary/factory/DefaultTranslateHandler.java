@@ -38,13 +38,13 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 
-import static cn.beichenhpy.dictionary.enums.DictType.CUSTOMIZE;
-import static cn.beichenhpy.dictionary.enums.DictType.SIMPLE;
+import static cn.beichenhpy.dictionary.enums.DictType.*;
 
 /**
- * 实体类翻译<p>
- * 需要定义好对应的字段<p>
- *
+ * 默认策略
+ * <p>递归翻译每个字段中带有{@link Dict}的字段
+ * @see cn.beichenhpy.dictionary.processor.DefaultSimpleProcessor
+ * @see cn.beichenhpy.dictionary.processor.DefaultCustomizeProcessor
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
