@@ -18,24 +18,10 @@ import org.springframework.context.annotation.Configuration;
  * <p> 2022/1/14 09:12
  */
 @Configuration
-public class DictTranslateHandlerConfig implements ApplicationContextAware {
-
-    private ApplicationContext applicationContext;
-    @Bean
-    public SimpleTranslateProcessor simpleTranslateProcessor(){
-        return new DefaultSimpleProcessor();
-    }
-
-    @Bean
-    public CustomizeTranslateProcessor customizeTranslateProcessor(){
-        return new DefaultCustomizeProcessor();
-    }
-
+public class DictTranslateHandlerConfig {
     @Bean
     public TranslateHandler entityTranslate() {
-        SimpleTranslateProcessor simpleTranslateProcessor = applicationContext.getBean(SimpleTranslateProcessor.class);
-        CustomizeTranslateProcessor customizeTranslateProcessor = applicationContext.getBean(CustomizeTranslateProcessor.class);
-        return new DefaultTranslateHandler(simpleTranslateProcessor, customizeTranslateProcessor);
+        return new DefaultTranslateHandler(new DefaultSimpleProcessor(), new DefaultCustomizeProcessor());
     }
 
 
@@ -44,8 +30,4 @@ public class DictTranslateHandlerConfig implements ApplicationContextAware {
         return new DictAspect();
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 }
