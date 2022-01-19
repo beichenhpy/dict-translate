@@ -33,6 +33,7 @@ import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
 import cn.beichenhpy.dictionary.enums.TranslateHandlerType;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -149,30 +150,36 @@ public class DefaultDictTranslateHandler extends AbstractDictTranslate {
     protected void doSimpleTranslate(Object current, @NonNull Object fieldValue, String ref, Dict dict) {
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
         SimplePlugin simplePlugin = dict.defaultPlugin().simplePlugin();
-        boolean revert = simplePlugin.isRevert();
-        String value = fieldValue.toString();
-        if (fieldValue instanceof Boolean) {
-            switch (value){
-                case TranslateConstant.LOWER_TRUE:
-                    setValueForSimple(revert, current, ref, TranslateConstant.YES, TranslateConstant.NO);
-                    break;
-                case TranslateConstant.LOWER_FALSE:
-                    setValueForSimple(revert, current, ref, TranslateConstant.NO, TranslateConstant.YES);
-                    break;
-                default:
-                    break;
+        String text = simplePlugin.text();
+        //添加对直接赋值的判断，优先级高于转换
+        if (StrUtil.isNotBlank(text)){
+            ReflectUtil.setFieldValue(current, ref, text);
+        }else {
+            boolean revert = simplePlugin.isRevert();
+            String value = fieldValue.toString();
+            if (fieldValue instanceof Boolean) {
+                switch (value){
+                    case TranslateConstant.LOWER_TRUE:
+                        setValueForSimple(revert, current, ref, TranslateConstant.YES, TranslateConstant.NO);
+                        break;
+                    case TranslateConstant.LOWER_FALSE:
+                        setValueForSimple(revert, current, ref, TranslateConstant.NO, TranslateConstant.YES);
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-        if (fieldValue instanceof Integer) {
-            switch (value){
-                case TranslateConstant.ONE:
-                    setValueForSimple(revert, current, ref, TranslateConstant.YES, TranslateConstant.NO);
-                    break;
-                case TranslateConstant.ZERO:
-                    setValueForSimple(revert, current, ref, TranslateConstant.NO, TranslateConstant.YES);
-                    break;
-                default:
-                    break;
+            if (fieldValue instanceof Integer) {
+                switch (value){
+                    case TranslateConstant.ONE:
+                        setValueForSimple(revert, current, ref, TranslateConstant.YES, TranslateConstant.NO);
+                        break;
+                    case TranslateConstant.ZERO:
+                        setValueForSimple(revert, current, ref, TranslateConstant.NO, TranslateConstant.YES);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package cn.beichenhpy.sample.controller;
 
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import cn.beichenhpy.sample.entity.Home;
 import cn.beichenhpy.sample.entity.Student;
 import cn.beichenhpy.sample.service.FooService;
 import com.alibaba.fastjson.JSONObject;
@@ -108,6 +109,13 @@ public class FooController {
             List<Student> students = fooService.bigData();
         }
         log.info("处理完成");
+    }
+
+    @GetMapping("/test12")
+    @EnableDictTranslate
+    public ResponseEntity<Home> test12(){
+        Home home = new Home().setOk("1");
+        return ResponseEntity.ok(home);
     }
 
 }

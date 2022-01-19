@@ -48,4 +48,10 @@ public @interface SimplePlugin {
      * @return false or true
      */
     boolean isRevert() default false;
+
+    /**
+     * 直接赋予字典翻译后的值
+     * @return 返回字典翻译的值
+     */
+    String text() default "";
 }
