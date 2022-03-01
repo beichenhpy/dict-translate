@@ -27,6 +27,7 @@ package cn.beichenhpy.dictionary;
 
 
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
+import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.beichenhpy.dictionary.factory.AbstractTranslateHandler;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ReflectUtil;
@@ -64,7 +65,7 @@ public class DictAspect {
         //获取handler
         TranslateHandler handler = AbstractTranslateHandler.getHandler(enableDictTranslate.mode());
         if (handler == null) {
-            throw new Exception("NoDictTranslateHandler: 无可选择的字典翻译器");
+            throw new DictionaryTranslateException("NoDictTranslateHandler: 无可选择的字典翻译器");
         }
         return handler.dictTranslate(wrapper(point, enableDictTranslate));
     }

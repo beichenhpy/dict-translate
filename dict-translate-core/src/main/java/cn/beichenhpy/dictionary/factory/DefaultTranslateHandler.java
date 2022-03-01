@@ -29,6 +29,7 @@ import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.enums.TranslateStrategy;
+import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.beichenhpy.dictionary.processor.CustomizeTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.SimpleTranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
@@ -77,7 +78,7 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
     @Override
     protected boolean preCheck(ResultWrapper resultWrapper) {
         if (resultWrapper == null){
-            throw new IllegalArgumentException("未传入传入参数");
+            throw new DictionaryTranslateException("未传入传入参数");
         }
         //fix:增加判空，手动调用时无法初始化注解信息
         if (resultWrapper.getEnableDictTranslate() != null){

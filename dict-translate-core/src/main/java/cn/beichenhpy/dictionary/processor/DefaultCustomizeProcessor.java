@@ -27,7 +27,7 @@ package cn.beichenhpy.dictionary.processor;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
-import cn.beichenhpy.dictionary.enums.DictType;
+import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.reflect.Method;
@@ -53,22 +53,22 @@ public class DefaultCustomizeProcessor implements CustomizeTranslateProcessor{
         if (!clazz.equals(Object.class)) {
             String methodName = customizePlugin.method();
             if (methodName.isEmpty()) {
-                throw new IllegalArgumentException("字典转换失败：未传入[method]");
+                throw new DictionaryTranslateException("字典转换失败：未传入[method]");
             }
             Class<?> parameterType = customizePlugin.arg();
             Method translateMethod = ReflectUtil.getMethod(clazz, methodName, parameterType);
             if (translateMethod == null) {
-                throw new IllegalArgumentException("字典转换失败：检查传入的[method]是否存在");
+                throw new DictionaryTranslateException("字典转换失败：检查传入的[method]是否存在");
             }
             //判断是否为静态方法
             int modifiers = translateMethod.getModifiers();
             boolean isStatic = Modifier.isStatic(modifiers);
             if (clazz.isEnum() && !isStatic) {
-                throw new IllegalArgumentException("字典转换失败: 传入type为枚举类时，必须传入静态方法method!");
+                throw new DictionaryTranslateException("字典转换失败: 传入type为枚举类时，必须传入静态方法method!");
             }
             boolean isSameClazz = checkFieldClassSameAsAnno(keyValue, parameterType);
             if (!isSameClazz) {
-                throw new IllegalArgumentException("字典转换失败：检查字段与注解arg参数是否一致，" +
+                throw new DictionaryTranslateException("字典转换失败：检查字段与注解arg参数是否一致，" +
                         "字段类型为:" + keyValue.getClass() + "注解参数类型为:" + parameterType);
             }
             try {
@@ -79,7 +79,7 @@ public class DefaultCustomizeProcessor implements CustomizeTranslateProcessor{
                 Object translateValue = ReflectUtil.invoke(instance, translateMethod, keyValue);
                 ReflectUtil.setFieldValue(result, ref, translateValue);
             } catch (Exception e) {
-                throw new IllegalArgumentException("字典转换失败：请注意传入的[arg]类型是否正确", e);
+                throw new DictionaryTranslateException("字典转换失败：请注意传入的[arg]类型是否正确", e);
             }
         }
         return result;
