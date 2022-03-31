@@ -23,11 +23,12 @@
  *
  */
 
-package cn.beichenhpy.dictionary.processor;
+package cn.beichenhpy.dictionary.processor.impl;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
+import cn.beichenhpy.dictionary.processor.SimpleTranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 

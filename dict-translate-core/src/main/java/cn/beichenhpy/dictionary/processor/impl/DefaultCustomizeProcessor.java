@@ -23,11 +23,12 @@
  *
  */
 
-package cn.beichenhpy.dictionary.processor;
+package cn.beichenhpy.dictionary.processor.impl;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
+import cn.beichenhpy.dictionary.processor.CustomizeTranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.reflect.Method;
@@ -41,7 +42,7 @@ import static cn.beichenhpy.dictionary.util.DictionaryUtil.checkFieldClassSameAs
  * @since 0.0.1
  * <p> 2022/1/19 19:02
  */
-public class DefaultCustomizeProcessor implements CustomizeTranslateProcessor{
+public class DefaultCustomizeProcessor implements CustomizeTranslateProcessor {
 
     @Override
     public Object process(Dict dict, Object result, Object keyValue) {

@@ -26,4 +26,9 @@ public class JSONTranslateHandler extends AbstractTranslateHandler {
     protected Object translate(Object result) {
         return result;
     }
+
+    @Override
+    protected void afterTranslate(ResultWrapper resultWrapper) throws Throwable {
+        // do nothing
+    }
 }

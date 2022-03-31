@@ -32,6 +32,8 @@ import cn.beichenhpy.dictionary.enums.TranslateStrategy;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.beichenhpy.dictionary.processor.CustomizeTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.SimpleTranslateProcessor;
+import cn.beichenhpy.dictionary.processor.impl.DefaultCustomizeProcessor;
+import cn.beichenhpy.dictionary.processor.impl.DefaultSimpleProcessor;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,8 +46,8 @@ import static cn.beichenhpy.dictionary.enums.DictType.*;
 /**
  * 默认策略
  * <p>递归翻译每个字段中带有{@link Dict}的字段
- * @see cn.beichenhpy.dictionary.processor.DefaultSimpleProcessor
- * @see cn.beichenhpy.dictionary.processor.DefaultCustomizeProcessor
+ * @see DefaultSimpleProcessor
+ * @see DefaultCustomizeProcessor
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
@@ -84,7 +86,6 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
         if (resultWrapper.getEnableDictTranslate() != null){
             IGNORE_CLASSES_HOLDER.set(resultWrapper.getEnableDictTranslate().ignore());
         }
-        //设置用户输入的忽略类
         return true;
     }
 
@@ -147,6 +148,11 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
             }
         }
         return result;
+    }
+
+    @Override
+    protected void afterTranslate(ResultWrapper resultWrapper) throws Throwable {
+        IGNORE_CLASSES_HOLDER.remove();
     }
 
 }

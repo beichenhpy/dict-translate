@@ -28,6 +28,7 @@ package cn.beichenhpy.dictionary.factory;
 import cn.beichenhpy.dictionary.TranslateHandler;
 import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -127,6 +128,12 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
     protected abstract Object translate(Object result) throws Throwable;
 
 
+    /**
+     * 翻译之后执行的方法
+     * @throws Throwable 异常
+     */
+    protected abstract void afterTranslate(ResultWrapper resultWrapper) throws Throwable;
+
 
     /**
      * 翻译方法<p>
@@ -142,6 +149,8 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
         if (preCheck(resultWrapper)) {
             result = translate(result);
         }
+        //后置
+        afterTranslate(resultWrapper);
         return result;
     }
 

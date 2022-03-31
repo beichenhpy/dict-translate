@@ -1,13 +1,8 @@
 package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.factory.DefaultTranslateHandler;
-import cn.beichenhpy.dictionary.processor.CustomizeTranslateProcessor;
-import cn.beichenhpy.dictionary.processor.DefaultCustomizeProcessor;
-import cn.beichenhpy.dictionary.processor.DefaultSimpleProcessor;
-import cn.beichenhpy.dictionary.processor.SimpleTranslateProcessor;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import cn.beichenhpy.dictionary.processor.impl.DefaultCustomizeProcessor;
+import cn.beichenhpy.dictionary.processor.impl.DefaultSimpleProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
