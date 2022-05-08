@@ -64,23 +64,18 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
      */
     public AbstractTranslateHandler() {
         registerHandler();
-        log.trace("{} register success, current handlers {}", this.getClass() ,TRANSLATE_HANDLERS);
+        log.trace("{} register success, current handlers {}", this.getClass(), TRANSLATE_HANDLERS);
     }
 
     /**
      * 不进行翻译的字段
      */
     protected static final Class<?>[] DEFAULT_TRANSLATE_BLACKLIST = {
-            //******************base********************
-            Enum.class, Annotation.class
             //*****************日期类*********************
-            , Date.class, Calendar.class, Year.class
-            , Month.class, LocalDate.class, LocalDateTime.class
+            Date.class, Calendar.class
             //*****************Map*********************
             , Map.class, HashMap.class, TreeMap.class
             , Hashtable.class, SortedMap.class, WeakHashMap.class
-            //*****************Thread*********************
-            , ThreadLocal.class
     };
 
     /**
@@ -104,15 +99,17 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
 
     /**
      * 将处理器存放到TRANSLATE_HANDLERS中
+     *
      * @param type 类型
      */
-    protected void registerHandler(String type){
+    protected void registerHandler(String type) {
         TRANSLATE_HANDLERS.put(type, this);
     }
 
 
     /**
      * 预检查
+     *
      * @param resultWrapper 包装结果类
      * @return 返回是否满足
      * @throws Throwable 异常
@@ -121,6 +118,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
 
     /**
      * 真正的翻译
+     *
      * @param result 返回值
      * @return 翻译后的返回值
      * @throws Throwable 异常
@@ -130,6 +128,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
 
     /**
      * 翻译之后执行的方法
+     *
      * @throws Throwable 异常
      */
     protected abstract void afterTranslate(ResultWrapper resultWrapper) throws Throwable;
@@ -138,6 +137,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
     /**
      * 翻译方法<p>
      * 实现接口的方法，然后自定义
+     *
      * @param resultWrapper 包装结果类
      * @return 返回翻译后的值
      * @throws Throwable 异常
@@ -180,7 +180,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
     /**
      * 检查字段是否可用
      *
-     * @param field              字段
+     * @param field         字段
      * @param ignoreClasses 黑名单
      * @return 可用返回true 否则返回false
      */
@@ -194,10 +194,13 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
         }
         Class<?> type = field.getType();
         Class<?> declaringClass = field.getDeclaringClass();
-        //如果当前字段所在类属于java.lang,那么直接返回false
+        //如果当前字段所在类属于java.lang/java.time,那么直接返回false
         String dp = declaringClass.getPackage().getName();
         log.debug("current package:{}, field name:{}", dp, field.getName());
         if (dp.startsWith("java.lang")) {
+            return false;
+        }
+        if (dp.startsWith("java.time")) {
             return false;
         }
         if (type.isArray() || declaringClass.isArray()) {
@@ -238,6 +241,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
 
     /**
      * 获取Handler
+     *
      * @param type 类型
      * @return 返回处理器
      */
