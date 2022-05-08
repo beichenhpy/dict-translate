@@ -1,8 +1,7 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
@@ -27,10 +26,13 @@ public class Teacher {
 
     private String genderDict;
 
-    @Dict(dictType = DictType.CUSTOMIZE,
-            ref = "statusDict",
-            defaultPlugin = @DefaultPlugin(
-                    customizePlugin = @CustomizePlugin(type = StatusEnum.class, method = "getValue", arg = Long.class)
+    @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict",
+            plugin = @DictPlugin(
+                    customizePlugin = @CustomizePlugin(
+                            type = StatusEnum.class,
+                            method = "getValue",
+                            arg = Long.class
+                    )
             ))
     private Long status;
 

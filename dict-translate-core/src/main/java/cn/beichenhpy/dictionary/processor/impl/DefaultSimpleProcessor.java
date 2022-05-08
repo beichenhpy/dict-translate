@@ -44,7 +44,7 @@ public class DefaultSimpleProcessor implements SimpleTranslateProcessor {
     public Object process(Dict dict, Object result, Object keyValue) {
         String ref = dict.ref();
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
-        SimplePlugin simplePlugin = dict.defaultPlugin().simplePlugin();
+        SimplePlugin simplePlugin = dict.plugin().simplePlugin();
         String text = simplePlugin.text();
         //添加对直接赋值的判断，优先级高于转换
         if (StrUtil.isNotBlank(text)) {

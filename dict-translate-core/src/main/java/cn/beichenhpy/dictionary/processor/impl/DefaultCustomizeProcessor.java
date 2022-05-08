@@ -47,7 +47,7 @@ public class DefaultCustomizeProcessor implements CustomizeTranslateProcessor {
     @Override
     public Object process(Dict dict, Object result, Object keyValue) {
         String ref = dict.ref();
-        CustomizePlugin customizePlugin = dict.defaultPlugin().customizePlugin();
+        CustomizePlugin customizePlugin = dict.plugin().customizePlugin();
         //本地字典表
         Class<?> clazz = customizePlugin.type();
         //不为默认Object则进行转换

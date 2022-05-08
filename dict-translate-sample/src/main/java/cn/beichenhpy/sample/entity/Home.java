@@ -2,10 +2,8 @@ package cn.beichenhpy.sample.entity;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.DbPlugin;
-import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
-import cn.beichenhpy.dictionary.annotation.plugin.base.StringPlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -29,8 +27,8 @@ public class Home {
     private String provinceText;
 
     @Dict(dictType = DictType.SIMPLE, ref = "okText",
-    defaultPlugin = @DefaultPlugin(
-            simplePlugin = @SimplePlugin(text = "是")
+    plugin = @DictPlugin(
+            simplePlugin = @SimplePlugin(isRevert = true)
     ))
     private String ok;
 

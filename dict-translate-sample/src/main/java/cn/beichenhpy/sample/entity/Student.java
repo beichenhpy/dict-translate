@@ -1,8 +1,8 @@
 package cn.beichenhpy.sample.entity;
 
-import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.annotation.plugin.DefaultPlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
+import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
 import cn.beichenhpy.dictionary.enums.DictType;
 import cn.beichenhpy.sample.service.FooService;
 import lombok.Data;
@@ -28,16 +28,23 @@ public class Student {
     private String genderDict;
 
     @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict",
-            defaultPlugin = @DefaultPlugin(
-                    customizePlugin = @CustomizePlugin(type = StatusEnum.class, method = "getValue", arg = Long.class)
+            plugin = @DictPlugin(
+                    customizePlugin = @CustomizePlugin(
+                            type = StatusEnum.class,
+                            method = "getValue",
+                            arg = Long.class
+                    )
             ))
     private Long status;
 
     private String statusDict;
 
     @Dict(dictType = DictType.CUSTOMIZE, ref = "healthText",
-            defaultPlugin = @DefaultPlugin(
-                    customizePlugin = @CustomizePlugin(type = FooService.class, method = "getValue", arg = String.class)
+            plugin = @DictPlugin(
+                    customizePlugin = @CustomizePlugin(
+                            type = FooService.class,
+                            method = "getValue",
+                            arg = String.class)
             ))
     private String health;
 

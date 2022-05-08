@@ -25,8 +25,6 @@
 
 package cn.beichenhpy.dictionary.annotation.plugin;
 
-import cn.beichenhpy.dictionary.annotation.plugin.base.*;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,7 +32,6 @@ import java.lang.annotation.Target;
 
 /**
  * 注解扩展
- * 因为注解不支持extend因此提供了一些可用的基本注解插件，如果觉得用起来不方便，可以重写此类，为保证SIMPLE和
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
@@ -46,73 +43,22 @@ import java.lang.annotation.Target;
 public @interface DictPlugin {
 
     /**
+     * 简单类型插件
+     * @return 默认SimplePlugin
+     */
+    SimplePlugin simplePlugin() default @SimplePlugin;
+
+    /**
+     * 自定义方法插件
+     * @return CustomizePlugin
+     */
+    CustomizePlugin customizePlugin() default @CustomizePlugin;
+
+    /**
      * db插件
      *
      * @return 默认为DbPlugin
      */
     DbPlugin dbPlugin() default @DbPlugin;
 
-    /**
-     * 方法签名插件
-     *
-     * @return 返回Signature
-     */
-    Signature signature() default @Signature;
-
-    /**
-     * 方法签名插件
-     *
-     * @return 返回Signature
-     */
-    Signature[] signatures() default {};
-
-    /**
-     * boolean类型插件
-     *
-     * @return 返回BoolPlugin
-     */
-    BoolPlugin whether() default @BoolPlugin;
-
-    /**
-     * int类型插件
-     *
-     * @return Int
-     */
-    IntPlugin number() default @IntPlugin;
-
-    /**
-     * int类型插件
-     *
-     * @return IntPlugin[]
-     */
-    IntPlugin[] numbers() default {};
-
-    /**
-     * String插件
-     *
-     * @return StringPlugin
-     */
-    StringPlugin strValue() default @StringPlugin;
-
-    /**
-     * String插件
-     *
-     * @return StringPlugin[]
-     */
-    StringPlugin[] strValues() default {};
-
-    /**
-     * class插件
-     *
-     * @return ClassPlugin
-     */
-    ClassPlugin clazz() default @ClassPlugin;
-
-
-    /**
-     * class插件
-     *
-     * @return ClassPlugin[]
-     */
-    ClassPlugin[] classes() default {};
 }
