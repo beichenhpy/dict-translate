@@ -26,7 +26,7 @@
 package cn.beichenhpy.dictionary.annotation;
 
 
-import cn.beichenhpy.dictionary.TranslateHandler;
+import cn.beichenhpy.dictionary.TranslateStrategyHandler;
 import cn.beichenhpy.dictionary.ResultWrapper;
 
 import java.lang.annotation.ElementType;
@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * 字典翻译注解<p>
  * 使用方式：注解在作为字典转换的字段上<p>
  * @author beichenhpy
- * @see TranslateHandler#dictTranslate(ResultWrapper)
+ * @see TranslateStrategyHandler#dictTranslate(ResultWrapper)
  * @since 0.0.1
  * @version 0.0.1
  * <p> 2021/9/2 13:15

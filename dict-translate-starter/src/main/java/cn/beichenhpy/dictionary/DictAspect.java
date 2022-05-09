@@ -46,7 +46,7 @@ import java.lang.reflect.Method;
  * 字典翻译切面
  * @version 0.0.1
  * <p> 2022/1/12 10:42
- * @see TranslateHandler
+ * @see TranslateStrategyHandler
  * @since 0.0.1
  */
 @Aspect
@@ -62,7 +62,7 @@ public class DictAspect {
     @Around(value = "pointCut(enableDictTranslate)", argNames = "point,enableDictTranslate")
     public Object parse(ProceedingJoinPoint point, EnableDictTranslate enableDictTranslate) throws Throwable {
         //获取handler
-        TranslateHandler handler = AbstractTranslateHandler.getHandler(enableDictTranslate.strategy());
+        TranslateStrategyHandler handler = AbstractTranslateStrategyHandler.getStrategyHandler(enableDictTranslate.strategy());
         if (handler == null) {
             throw new DictionaryTranslateException("NoDictTranslateHandler: 无可选择的字典翻译器");
         }

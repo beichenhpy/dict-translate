@@ -27,14 +27,14 @@ package cn.beichenhpy.dictionary.enums;
 
 
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.DefaultTranslateHandler;
+import cn.beichenhpy.dictionary.DefaultTranslateStrategyHandler;
 
 /**
  * 字典翻译策略，默认DEFAULT为递归对{@linkplain Dict#ref()}赋值
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * @see DefaultTranslateHandler
+ * @see DefaultTranslateStrategyHandler
  * <p> 2022/1/14 08:55
  */
 public interface TranslateStrategy {

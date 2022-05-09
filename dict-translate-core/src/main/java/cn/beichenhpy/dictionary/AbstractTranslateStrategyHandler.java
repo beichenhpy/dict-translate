@@ -45,18 +45,18 @@ import java.util.stream.Collectors;
  * @author beichenhpy
  * @version 0.0.1
  * <p> 2022/1/13 13:33
- * @see DefaultTranslateHandler
+ * @see DefaultTranslateStrategyHandler
  * @since 0.0.1
  */
 @Slf4j
-public abstract class AbstractTranslateHandler implements TranslateHandler {
+public abstract class AbstractTranslateStrategyHandler implements TranslateStrategyHandler {
 
     /**
      * 构造函数默认调用子类实现的add方法，将自身注册到TRANSLATE_HANDLERS中
      */
-    public AbstractTranslateHandler() {
+    public AbstractTranslateStrategyHandler() {
         registerHandler();
-        log.trace("{} register success, current handlers {}", this.getClass(), TRANSLATE_HANDLERS);
+        log.trace("{} register success, current handlers {}", this.getClass(), TRANSLATE_STRATEGY_HANDLERS);
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
     /**
      * 翻译处理器，存放处理器类型和处理器 runtime时只会进行get操作，线程安全
      */
-    protected static final Map<String, TranslateHandler> TRANSLATE_HANDLERS = new HashMap<>();
+    protected static final Map<String, TranslateStrategyHandler> TRANSLATE_STRATEGY_HANDLERS = new HashMap<>();
     /**
      * Dict注解信息
      */
@@ -95,7 +95,7 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
      * @param type 类型
      */
     protected void registerHandler(String type) {
-        TRANSLATE_HANDLERS.put(type, this);
+        TRANSLATE_STRATEGY_HANDLERS.put(type, this);
     }
 
 
@@ -234,12 +234,12 @@ public abstract class AbstractTranslateHandler implements TranslateHandler {
     /**
      * 获取Handler
      *
-     * @param type 类型
+     * @param strategy 类型
      * @return 返回处理器
      */
-    public static TranslateHandler getHandler(String type) {
-        for (Map.Entry<String, TranslateHandler> entry : TRANSLATE_HANDLERS.entrySet()) {
-            if (entry.getKey().equals(type)) {
+    public static TranslateStrategyHandler getStrategyHandler(String strategy) {
+        for (Map.Entry<String, TranslateStrategyHandler> entry : TRANSLATE_STRATEGY_HANDLERS.entrySet()) {
+            if (entry.getKey().equals(strategy)) {
                 return entry.getValue();
             }
         }

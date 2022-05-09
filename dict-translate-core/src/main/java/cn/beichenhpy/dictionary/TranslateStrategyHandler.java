@@ -33,7 +33,7 @@ package cn.beichenhpy.dictionary;
  * @since 0.0.1
  * <p> 2022/1/14 09:01
  */
-public interface TranslateHandler {
+public interface TranslateStrategyHandler {
     /**
      * 字典翻译,需要实现DictType类型的翻译
      * @see cn.beichenhpy.dictionary.enums.DictType

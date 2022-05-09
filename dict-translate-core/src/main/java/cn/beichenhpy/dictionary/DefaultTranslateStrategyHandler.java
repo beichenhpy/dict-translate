@@ -53,13 +53,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p> 2022/1/14 09:05
  */
 @Slf4j
-public class DefaultTranslateHandler extends AbstractTranslateHandler {
+public class DefaultTranslateStrategyHandler extends AbstractTranslateStrategyHandler {
 
     //存储Processors
     private final Map<String, AbstractTranslateProcessor> translateProcessorStorage = new ConcurrentHashMap<>(10);
 
 
-    public DefaultTranslateHandler(List<AbstractTranslateProcessor> processors) {
+    public DefaultTranslateStrategyHandler(List<AbstractTranslateProcessor> processors) {
         for (AbstractTranslateProcessor processor : processors) {
             translateProcessorStorage.put(processor.getDictType(), processor);
         }
