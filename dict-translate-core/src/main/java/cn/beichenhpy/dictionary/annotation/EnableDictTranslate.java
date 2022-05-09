@@ -52,12 +52,11 @@ import java.lang.annotation.Target;
 public @interface EnableDictTranslate {
 
     /**
-     * JSON 直接操作返回值，添加字段
-     * ENTITY 对已经有的字段赋值
+     * DEFAULT 对已经有的字段赋值
      *
-     * @return 翻译模式
+     * @return 翻译策略
      */
-    String mode() default TranslateStrategy.DEFAULT;
+    String strategy() default TranslateStrategy.DEFAULT;
 
     /**
      * 忽略翻译类，用于抑制警告

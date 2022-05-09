@@ -1,14 +1,14 @@
 package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.enums.DictType;
-import cn.beichenhpy.dictionary.processor.TranslateProcessor;
+import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
 import cn.beichenhpy.dictionary.processor.SimpleProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author beichenhpy
@@ -20,10 +20,12 @@ import java.util.Map;
 public class DictTranslateHandlerConfig {
     @Bean
     public TranslateHandler entityTranslate() {
-        Map<String, TranslateProcessor> translateProcessorMap = new HashMap<>();
-        translateProcessorMap.put(DictType.SIMPLE, new SimpleProcessor());
-        translateProcessorMap.put(DictType.CUSTOMIZE, new CustomizeProcessor());
-        return new DefaultTranslateHandler(translateProcessorMap);
+        SimpleProcessor simpleProcessor = new SimpleProcessor(DictType.SIMPLE);
+        CustomizeProcessor customizeProcessor = new CustomizeProcessor(DictType.CUSTOMIZE);
+        List<AbstractTranslateProcessor> processors = new ArrayList<>();
+        processors.add(simpleProcessor);
+        processors.add(customizeProcessor);
+        return new DefaultTranslateHandler(processors);
     }
 
 

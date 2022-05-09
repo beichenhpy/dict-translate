@@ -26,6 +26,9 @@
 package cn.beichenhpy.dictionary.processor;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Field;
 
@@ -37,7 +40,12 @@ import java.lang.reflect.Field;
  * @since 0.0.1
  * <p> 2022/1/19 18:33
  */
-public interface TranslateProcessor {
+@Getter
+@Setter
+@AllArgsConstructor
+public abstract class AbstractTranslateProcessor {
+
+    private String dictType;
 
     /**
      * 翻译
@@ -47,5 +55,5 @@ public interface TranslateProcessor {
      * @param field 当前字段
      * @return 返回翻译后的值
      */
-    Object process(Dict dict, Object result, Object keyValue, Field field);
+    public abstract Object process(Dict dict, Object result, Object keyValue, Field field);
 }

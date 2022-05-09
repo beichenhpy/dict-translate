@@ -37,21 +37,6 @@ import java.lang.annotation.Target;
 /**
  * 字典翻译注解<p>
  * 使用方式：注解在作为字典转换的字段上<p>
- * <p>
- * [ENTITY模式举例,需要给出字典翻译字段,返回翻译后的实体类]<p>
- * <pre>
- *     <t>@Dict</t>(dictType = DictType.SIMPLE, ref = "genderDict")
- *     private Boolean gender;
- *
- *     private String genderDict;
- *
- *     <t>@Dict</t>(dictType = DictType.CUSTOMIZE, ref = "statusDict",
- *             commonSignature = @CustomizeSignature(type = StatusEnum.class, method = "getValue", arg = Long.class))
- *     private Long status;
- *
- *     private String statusDict;
- * </pre>
- * <p>
  * @author beichenhpy
  * @see TranslateHandler#dictTranslate(ResultWrapper)
  * @since 0.0.1

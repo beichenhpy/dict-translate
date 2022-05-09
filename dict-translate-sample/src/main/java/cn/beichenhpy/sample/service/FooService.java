@@ -25,7 +25,7 @@ import java.util.*;
 @Slf4j
 @Service
 public class FooService {
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public IPage<Student> test() {
         IPage<Student> page = new Page<>();
         page.setRecords(prepare());
@@ -39,12 +39,12 @@ public class FooService {
     }
 
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public Set<Student> test3() {
         return new HashSet<>(prepare());
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public Student test2() {
         Teacher teacher1 =
                 new Teacher()
@@ -71,39 +71,39 @@ public class FooService {
     }
 
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public List<String> test4() {
         return new ArrayList<>(Collections.singletonList("1"));
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public Map<String, String> test5() {
         Map<String, String> map = new HashMap<>();
         map.put("1", "1");
         return map;
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public Integer test6() {
         return 1;
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public String test7() {
         return "1";
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public Date test8() {
         return new Date();
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public LocalDateTime test9() {
         return LocalDateTime.now();
     }
 
-    @EnableDictTranslate(mode = TranslateStrategy.DEFAULT)
+    @EnableDictTranslate(strategy = TranslateStrategy.DEFAULT)
     public JSONObject test10() {
         String a = "{\"a\":\"a\"}";
         return JSON.parseObject(a);

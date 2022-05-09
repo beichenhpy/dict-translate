@@ -29,7 +29,7 @@ import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.enums.TranslateStrategy;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
-import cn.beichenhpy.dictionary.processor.TranslateProcessor;
+import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
 import cn.beichenhpy.dictionary.processor.SimpleProcessor;
 import cn.hutool.core.util.ReflectUtil;
@@ -56,11 +56,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultTranslateHandler extends AbstractTranslateHandler {
 
     //存储Processors
-    private final ConcurrentHashMap<String, TranslateProcessor> translateProcessorStorage = new ConcurrentHashMap<>(10);
+    private final Map<String, AbstractTranslateProcessor> translateProcessorStorage = new ConcurrentHashMap<>(10);
 
 
-    public DefaultTranslateHandler(Map<String, TranslateProcessor> translateProcessorMap) {
-        translateProcessorStorage.putAll(translateProcessorMap);
+    public DefaultTranslateHandler(List<AbstractTranslateProcessor> processors) {
+        for (AbstractTranslateProcessor processor : processors) {
+            translateProcessorStorage.put(processor.getDictType(), processor);
+        }
     }
 
     /**
@@ -131,11 +133,11 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
                             continue;
                         }
                         //获取processor翻译每个字段的数据
-                        TranslateProcessor translateProcessor = translateProcessorStorage.get(dict.dictType());
-                        if (translateProcessor == null) {
+                        AbstractTranslateProcessor abstractTranslateProcessor = translateProcessorStorage.get(dict.dictType());
+                        if (abstractTranslateProcessor == null) {
                             throw new DictionaryTranslateException("未找到" + dict.dictType() + "对应的translateProcessor");
                         }
-                        result = translateProcessor.process(dict, result, key, field);
+                        result = abstractTranslateProcessor.process(dict, result, key, field);
                     }
                 }
             }

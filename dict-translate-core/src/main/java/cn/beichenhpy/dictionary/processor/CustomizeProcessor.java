@@ -28,7 +28,6 @@ package cn.beichenhpy.dictionary.processor;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
-import cn.beichenhpy.dictionary.processor.TranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +44,11 @@ import static cn.beichenhpy.dictionary.util.DictionaryUtil.checkFieldClassSameAs
  * <p> 2022/1/19 19:02
  */
 @Slf4j
-public class CustomizeProcessor implements TranslateProcessor {
+public class CustomizeProcessor extends AbstractTranslateProcessor {
+
+    public CustomizeProcessor(String dictType) {
+        super(dictType);
+    }
 
     @Override
     public Object process(Dict dict, Object result, Object keyValue, Field field) {

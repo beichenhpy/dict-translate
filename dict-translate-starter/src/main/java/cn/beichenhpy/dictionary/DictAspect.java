@@ -62,7 +62,7 @@ public class DictAspect {
     @Around(value = "pointCut(enableDictTranslate)", argNames = "point,enableDictTranslate")
     public Object parse(ProceedingJoinPoint point, EnableDictTranslate enableDictTranslate) throws Throwable {
         //获取handler
-        TranslateHandler handler = AbstractTranslateHandler.getHandler(enableDictTranslate.mode());
+        TranslateHandler handler = AbstractTranslateHandler.getHandler(enableDictTranslate.strategy());
         if (handler == null) {
             throw new DictionaryTranslateException("NoDictTranslateHandler: 无可选择的字典翻译器");
         }
