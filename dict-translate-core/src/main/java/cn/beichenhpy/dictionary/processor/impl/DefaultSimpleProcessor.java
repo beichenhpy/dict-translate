@@ -28,9 +28,11 @@ package cn.beichenhpy.dictionary.processor.impl;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
 import cn.beichenhpy.dictionary.enums.TranslateConstant;
-import cn.beichenhpy.dictionary.processor.SimpleTranslateProcessor;
+import cn.beichenhpy.dictionary.processor.TranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.lang.reflect.Field;
 
 /**
  * @author beichenhpy
@@ -38,19 +40,23 @@ import cn.hutool.core.util.StrUtil;
  * @since 0.0.1
  * <p> 2022/1/19 18:59
  */
-public class DefaultSimpleProcessor implements SimpleTranslateProcessor {
+public class DefaultSimpleProcessor implements TranslateProcessor {
 
     @Override
-    public Object process(Dict dict, Object result, Object keyValue) {
+    public Object process(Dict dict, Object result, Object keyValue, Field field) {
         String ref = dict.ref();
         //判断字段类型 boolean 在 getFieldValue时已经装箱为Boolean了
-        SimplePlugin simplePlugin = dict.plugin().simplePlugin();
-        String text = simplePlugin.text();
+        SimplePlugin simplePlugin = field.getAnnotation(SimplePlugin.class);
+        String text = null;
+        boolean revert = false;
+        if (simplePlugin != null) {
+            text = simplePlugin.text();
+            revert = simplePlugin.isRevert();
+        }
         //添加对直接赋值的判断，优先级高于转换
         if (StrUtil.isNotBlank(text)) {
             ReflectUtil.setFieldValue(result, ref, text);
         } else {
-            boolean revert = simplePlugin.isRevert();
             String value = keyValue.toString();
             if (keyValue instanceof Boolean) {
                 switch (value) {

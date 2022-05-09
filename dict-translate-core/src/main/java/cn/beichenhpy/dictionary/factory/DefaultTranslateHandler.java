@@ -30,8 +30,7 @@ import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.enums.TranslateStrategy;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
-import cn.beichenhpy.dictionary.processor.CustomizeTranslateProcessor;
-import cn.beichenhpy.dictionary.processor.SimpleTranslateProcessor;
+import cn.beichenhpy.dictionary.processor.TranslateProcessor;
 import cn.beichenhpy.dictionary.processor.impl.DefaultCustomizeProcessor;
 import cn.beichenhpy.dictionary.processor.impl.DefaultSimpleProcessor;
 import cn.hutool.core.util.ReflectUtil;
@@ -40,29 +39,29 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
-
-import static cn.beichenhpy.dictionary.enums.DictType.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 默认策略
  * <p>递归翻译每个字段中带有{@link Dict}的字段
- * @see DefaultSimpleProcessor
- * @see DefaultCustomizeProcessor
+ *
  * @author beichenhpy
  * @version 0.0.1
+ * @see DefaultSimpleProcessor
+ * @see DefaultCustomizeProcessor
  * @since 0.0.1
  * <p> 2022/1/14 09:05
  */
 @Slf4j
 public class DefaultTranslateHandler extends AbstractTranslateHandler {
 
-    private final SimpleTranslateProcessor simpleTranslateProcessor;
-    private final CustomizeTranslateProcessor customizeTranslateProcessor;
+    //存储Processors
+    private final ConcurrentHashMap<String, TranslateProcessor> translateProcessorStorage = new ConcurrentHashMap<>(10);
 
 
-    public DefaultTranslateHandler(SimpleTranslateProcessor simpleTranslateProcessor, CustomizeTranslateProcessor customizeTranslateProcessor){
-        this.customizeTranslateProcessor = customizeTranslateProcessor;
-        this.simpleTranslateProcessor = simpleTranslateProcessor;
+    public DefaultTranslateHandler(Map<String, TranslateProcessor> translateProcessorMap) {
+        translateProcessorStorage.putAll(translateProcessorMap);
     }
 
     /**
@@ -79,11 +78,11 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
 
     @Override
     protected boolean preCheck(ResultWrapper resultWrapper) {
-        if (resultWrapper == null){
+        if (resultWrapper == null) {
             throw new DictionaryTranslateException("未传入传入参数");
         }
         //fix:增加判空，手动调用时无法初始化注解信息
-        if (resultWrapper.getEnableDictTranslate() != null){
+        if (resultWrapper.getEnableDictTranslate() != null) {
             IGNORE_CLASSES_HOLDER.set(resultWrapper.getEnableDictTranslate().ignore());
         }
         return true;
@@ -132,17 +131,11 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
                         if (dict == null) {
                             continue;
                         }
-                        switch (dict.dictType()) {
-                            case SIMPLE:
-                                result = simpleTranslateProcessor.process(dict, result, key);
-                                break;
-                            case CUSTOMIZE:
-                                result = customizeTranslateProcessor.process(dict, result, key);
-                                break;
-                            default:
-                                break;
-
+                        TranslateProcessor translateProcessor = translateProcessorStorage.get(dict.dictType());
+                        if (translateProcessor == null) {
+                            throw new DictionaryTranslateException("未找到" + dict.dictType() + "对应的translateProcessor");
                         }
+                        result = translateProcessor.process(dict, result, key, field);
                     }
                 }
             }
@@ -151,7 +144,7 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
     }
 
     @Override
-    protected void afterTranslate(ResultWrapper resultWrapper) throws Throwable {
+    protected void afterTranslate(ResultWrapper resultWrapper) {
         IGNORE_CLASSES_HOLDER.remove();
     }
 

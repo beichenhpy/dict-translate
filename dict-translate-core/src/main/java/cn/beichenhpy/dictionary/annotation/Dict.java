@@ -28,7 +28,6 @@ package cn.beichenhpy.dictionary.annotation;
 
 import cn.beichenhpy.dictionary.TranslateHandler;
 import cn.beichenhpy.dictionary.ResultWrapper;
-import cn.beichenhpy.dictionary.annotation.plugin.DictPlugin;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -74,10 +73,4 @@ public @interface Dict {
      * @return 返回名
      */
     String ref();
-
-    /**
-     * 翻译插件
-     * @return 返回插件
-     */
-    DictPlugin plugin() default @DictPlugin;
 }

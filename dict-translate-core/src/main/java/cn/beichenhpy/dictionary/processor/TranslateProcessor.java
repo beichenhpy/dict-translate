@@ -27,6 +27,8 @@ package cn.beichenhpy.dictionary.processor;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 
+import java.lang.reflect.Field;
+
 /**
  * @author beichenhpy
  * @version 0.0.1
@@ -40,7 +42,8 @@ public interface TranslateProcessor {
      * @param dict dict注解
      * @param result 原始值
      * @param keyValue key的值
+     * @param field 当前字段
      * @return 返回翻译后的值
      */
-    Object process(Dict dict, Object result, Object keyValue);
+    Object process(Dict dict, Object result, Object keyValue, Field field);
 }

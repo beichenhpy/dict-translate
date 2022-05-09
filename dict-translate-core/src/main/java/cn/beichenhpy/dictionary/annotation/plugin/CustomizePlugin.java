@@ -25,10 +25,7 @@
 
 package cn.beichenhpy.dictionary.annotation.plugin;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 字典类型为CUSTOMIZE类型时所用的注解插件
@@ -40,7 +37,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({})
+@Target(ElementType.FIELD)
 public @interface CustomizePlugin {
     /**
      *
@@ -48,7 +45,7 @@ public @interface CustomizePlugin {
      *
      * @return 返回方法所在类
      */
-    Class<?> type() default Object.class;
+    Class<?> type();
 
     /**
      *
@@ -56,13 +53,12 @@ public @interface CustomizePlugin {
      *
      * @return 返回方法名
      */
-    String method() default "";
+    String method();
 
     /**
      *
-     * 参数类型 默认String
      *
      * @return 枚举方法的参数类型
      */
-    Class<?> arg() default String.class;
+    Class<?> arg();
 }

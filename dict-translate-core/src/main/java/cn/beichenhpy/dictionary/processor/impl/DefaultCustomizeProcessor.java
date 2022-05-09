@@ -28,9 +28,11 @@ package cn.beichenhpy.dictionary.processor.impl;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
-import cn.beichenhpy.dictionary.processor.CustomizeTranslateProcessor;
+import cn.beichenhpy.dictionary.processor.TranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
+import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -42,12 +44,17 @@ import static cn.beichenhpy.dictionary.util.DictionaryUtil.checkFieldClassSameAs
  * @since 0.0.1
  * <p> 2022/1/19 19:02
  */
-public class DefaultCustomizeProcessor implements CustomizeTranslateProcessor {
+@Slf4j
+public class DefaultCustomizeProcessor implements TranslateProcessor {
 
     @Override
-    public Object process(Dict dict, Object result, Object keyValue) {
+    public Object process(Dict dict, Object result, Object keyValue, Field field) {
         String ref = dict.ref();
-        CustomizePlugin customizePlugin = dict.plugin().customizePlugin();
+        CustomizePlugin customizePlugin = field.getAnnotation(CustomizePlugin.class);
+        if (customizePlugin == null){
+            log.warn("该field: {}未添加CustomizePlugin注解", field.getName());
+            return result;
+        }
         //本地字典表
         Class<?> clazz = customizePlugin.type();
         //不为默认Object则进行转换

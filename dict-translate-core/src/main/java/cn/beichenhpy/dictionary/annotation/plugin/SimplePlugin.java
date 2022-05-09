@@ -25,10 +25,7 @@
 
 package cn.beichenhpy.dictionary.annotation.plugin;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 所需翻译的字典类型为SIMPLE类型时所用的注解插件
@@ -39,7 +36,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({})
+@Target(ElementType.FIELD)
 public @interface SimplePlugin {
 
     /**
