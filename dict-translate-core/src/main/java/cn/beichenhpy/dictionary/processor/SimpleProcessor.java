@@ -23,7 +23,7 @@
  *
  */
 
-package cn.beichenhpy.dictionary.processor.impl;
+package cn.beichenhpy.dictionary.processor;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
  * @since 0.0.1
  * <p> 2022/1/19 18:59
  */
-public class DefaultSimpleProcessor implements TranslateProcessor {
+public class SimpleProcessor implements TranslateProcessor {
 
     @Override
     public Object process(Dict dict, Object result, Object keyValue, Field field) {

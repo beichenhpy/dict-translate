@@ -23,7 +23,7 @@
  *
  */
 
-package cn.beichenhpy.dictionary.processor.impl;
+package cn.beichenhpy.dictionary.processor;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin;
@@ -45,7 +45,7 @@ import static cn.beichenhpy.dictionary.util.DictionaryUtil.checkFieldClassSameAs
  * <p> 2022/1/19 19:02
  */
 @Slf4j
-public class DefaultCustomizeProcessor implements TranslateProcessor {
+public class CustomizeProcessor implements TranslateProcessor {
 
     @Override
     public Object process(Dict dict, Object result, Object keyValue, Field field) {

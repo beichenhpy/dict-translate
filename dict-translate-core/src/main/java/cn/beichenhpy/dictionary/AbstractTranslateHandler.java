@@ -23,25 +23,17 @@
  *
  */
 
-package cn.beichenhpy.dictionary.factory;
+package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.TranslateHandler;
-import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 

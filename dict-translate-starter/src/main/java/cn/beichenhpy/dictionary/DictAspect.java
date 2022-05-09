@@ -28,7 +28,6 @@ package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
-import cn.beichenhpy.dictionary.factory.AbstractTranslateHandler;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +59,7 @@ public class DictAspect {
 
     }
 
-    @Around("pointCut(enableDictTranslate)")
+    @Around(value = "pointCut(enableDictTranslate)", argNames = "point,enableDictTranslate")
     public Object parse(ProceedingJoinPoint point, EnableDictTranslate enableDictTranslate) throws Throwable {
         //获取handler
         TranslateHandler handler = AbstractTranslateHandler.getHandler(enableDictTranslate.mode());

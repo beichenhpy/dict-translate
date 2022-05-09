@@ -30,6 +30,8 @@ import cn.beichenhpy.dictionary.annotation.Dict;
 import java.lang.reflect.Field;
 
 /**
+ * 用于翻译被注解Dict修饰的字段的数据
+ * @see Dict
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
@@ -40,7 +42,7 @@ public interface TranslateProcessor {
     /**
      * 翻译
      * @param dict dict注解
-     * @param result 原始值
+     * @param result 字段值
      * @param keyValue key的值
      * @param field 当前字段
      * @return 返回翻译后的值

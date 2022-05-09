@@ -23,16 +23,15 @@
  *
  */
 
-package cn.beichenhpy.dictionary.factory;
+package cn.beichenhpy.dictionary;
 
-import cn.beichenhpy.dictionary.ResultWrapper;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.enums.TranslateStrategy;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.beichenhpy.dictionary.processor.TranslateProcessor;
-import cn.beichenhpy.dictionary.processor.impl.DefaultCustomizeProcessor;
-import cn.beichenhpy.dictionary.processor.impl.DefaultSimpleProcessor;
+import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
+import cn.beichenhpy.dictionary.processor.SimpleProcessor;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,8 +47,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author beichenhpy
  * @version 0.0.1
- * @see DefaultSimpleProcessor
- * @see DefaultCustomizeProcessor
+ * @see SimpleProcessor
+ * @see CustomizeProcessor
  * @since 0.0.1
  * <p> 2022/1/14 09:05
  */
@@ -131,6 +130,7 @@ public class DefaultTranslateHandler extends AbstractTranslateHandler {
                         if (dict == null) {
                             continue;
                         }
+                        //获取processor翻译每个字段的数据
                         TranslateProcessor translateProcessor = translateProcessorStorage.get(dict.dictType());
                         if (translateProcessor == null) {
                             throw new DictionaryTranslateException("未找到" + dict.dictType() + "对应的translateProcessor");

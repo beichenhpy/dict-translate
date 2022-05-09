@@ -27,7 +27,7 @@ package cn.beichenhpy.dictionary.enums;
 
 
 import cn.beichenhpy.dictionary.annotation.Dict;
-import cn.beichenhpy.dictionary.factory.DefaultTranslateHandler;
+import cn.beichenhpy.dictionary.DefaultTranslateHandler;
 
 /**
  * 字典翻译策略，默认DEFAULT为递归对{@linkplain Dict#ref()}赋值
