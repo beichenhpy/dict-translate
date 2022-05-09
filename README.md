@@ -19,10 +19,8 @@ class User {
 
 
     //finishDict填充时 会按照 true->否 false->是 填充
-    @Dict(dictType = DictType.SIMPLE, ref = "finishDict",
-            plugin = @DictPlugin(
-                    simplePlugin = @SimplePlugin(isRevert = true)
-            ))
+    @Dict(dictType = DictType.SIMPLE, ref = "finishDict")
+    @SimplePlugin(isRevert = true)
     private Boolean finish;
 
     private String finishDict;
