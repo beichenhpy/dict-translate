@@ -4,6 +4,43 @@
 
 ## 使用方式
 
+### 注册翻译处理器
+
+1. 选择你需要的处理器进行注册，使用默认策略
+如果不注册对应的处理器，使用对应的`DictType`则会报错
+```java
+import cn.beichenhpy.dictionary.DefaultTranslateStrategyHandler;
+import cn.beichenhpy.dictionary.TranslateStrategyHandler;
+import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
+import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
+import cn.beichenhpy.dictionary.processor.SimpleProcessor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+
+@Configuration
+public class DictConfig {
+
+    @Resource
+    private SimpleProcessor simpleProcessor;
+
+    @Resource
+    private CustomizeProcessor customizeProcessor;
+
+    @Bean
+    public TranslateStrategyHandler translateHandler() {
+        List<AbstractTranslateProcessor> processors = new ArrayList<>();
+        processors.add(simpleProcessor);
+        processors.add(customizeProcessor);
+        return new DefaultTranslateStrategyHandler(processors);
+    }
+}
+```
+
 ### SIMPLE模式
 
 1. 简单类型的翻译，主要是对 true/false 0/1 进行对应的翻译 支持：直接赋值和反序 默认 true->是 false->否 0->否 1—>是
