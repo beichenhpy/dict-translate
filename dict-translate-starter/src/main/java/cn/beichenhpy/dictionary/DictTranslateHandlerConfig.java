@@ -1,16 +1,13 @@
 package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.enums.DictType;
-import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
 import cn.beichenhpy.dictionary.processor.SimpleProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * 自动配置文件，只提供默认的两个处理器和切面配置，需要按需引入processor
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
@@ -18,14 +15,15 @@ import java.util.List;
  */
 @Configuration
 public class DictTranslateHandlerConfig {
+
     @Bean
-    public TranslateHandler entityTranslate() {
-        SimpleProcessor simpleProcessor = new SimpleProcessor(DictType.SIMPLE);
-        CustomizeProcessor customizeProcessor = new CustomizeProcessor(DictType.CUSTOMIZE);
-        List<AbstractTranslateProcessor> processors = new ArrayList<>();
-        processors.add(simpleProcessor);
-        processors.add(customizeProcessor);
-        return new DefaultTranslateHandler(processors);
+    public SimpleProcessor simpleProcessor(){
+        return new SimpleProcessor(DictType.SIMPLE);
+    }
+
+    @Bean
+    public CustomizeProcessor customizeProcessor(){
+        return new CustomizeProcessor(DictType.CUSTOMIZE);
     }
 
 
