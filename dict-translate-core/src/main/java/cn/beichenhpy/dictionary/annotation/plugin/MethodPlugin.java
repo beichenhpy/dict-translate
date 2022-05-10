@@ -38,7 +38,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CustomizePlugin {
+public @interface MethodPlugin {
     /**
      *
      * Object不处理

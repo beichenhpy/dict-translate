@@ -25,6 +25,8 @@
 
 package cn.beichenhpy.dictionary.enums;
 
+import cn.beichenhpy.dictionary.annotation.plugin.MethodPlugin;
+
 /**
  * 字典翻译类型，可自定义，String类型
  * @author beichenhpy
@@ -41,7 +43,7 @@ public interface DictType {
     String SIMPLE = "SIMPLE";
     /**
      * 自定义类型，通过自定义方法查询key所对应的value值
-     * @see cn.beichenhpy.dictionary.annotation.plugin.CustomizePlugin
+     * @see MethodPlugin
      */
     String CUSTOMIZE = "CUSTOMIZE";
 

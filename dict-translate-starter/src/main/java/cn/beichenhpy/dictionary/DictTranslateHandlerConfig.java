@@ -1,8 +1,8 @@
 package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.enums.DictType;
-import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
-import cn.beichenhpy.dictionary.processor.SimpleProcessor;
+import cn.beichenhpy.dictionary.processor.MethodPluginProcessor;
+import cn.beichenhpy.dictionary.processor.SimplePluginProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,13 +17,13 @@ import org.springframework.context.annotation.Configuration;
 public class DictTranslateHandlerConfig {
 
     @Bean
-    public SimpleProcessor simpleProcessor(){
-        return new SimpleProcessor(DictType.SIMPLE);
+    public SimplePluginProcessor simpleProcessor(){
+        return new SimplePluginProcessor(DictType.SIMPLE);
     }
 
     @Bean
-    public CustomizeProcessor customizeProcessor(){
-        return new CustomizeProcessor(DictType.CUSTOMIZE);
+    public MethodPluginProcessor methodPluginProcessor(){
+        return new MethodPluginProcessor(DictType.CUSTOMIZE);
     }
 
 

@@ -30,8 +30,8 @@ import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
 import cn.beichenhpy.dictionary.enums.TranslateStrategy;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
-import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
-import cn.beichenhpy.dictionary.processor.SimpleProcessor;
+import cn.beichenhpy.dictionary.processor.MethodPluginProcessor;
+import cn.beichenhpy.dictionary.processor.SimplePluginProcessor;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,8 +47,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author beichenhpy
  * @version 0.0.1
- * @see SimpleProcessor
- * @see CustomizeProcessor
+ * @see SimplePluginProcessor
+ * @see MethodPluginProcessor
  * @since 0.0.1
  * <p> 2022/1/14 09:05
  */

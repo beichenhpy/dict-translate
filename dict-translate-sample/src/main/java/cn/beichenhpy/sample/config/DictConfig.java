@@ -3,8 +3,8 @@ package cn.beichenhpy.sample.config;
 import cn.beichenhpy.dictionary.DefaultTranslateStrategyHandler;
 import cn.beichenhpy.dictionary.TranslateStrategyHandler;
 import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
-import cn.beichenhpy.dictionary.processor.CustomizeProcessor;
-import cn.beichenhpy.dictionary.processor.SimpleProcessor;
+import cn.beichenhpy.dictionary.processor.MethodPluginProcessor;
+import cn.beichenhpy.dictionary.processor.SimplePluginProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,16 +21,16 @@ import java.util.List;
 public class DictConfig {
 
     @Resource
-    private SimpleProcessor simpleProcessor;
+    private SimplePluginProcessor simplePluginProcessor;
 
     @Resource
-    private CustomizeProcessor customizeProcessor;
+    private MethodPluginProcessor methodPluginProcessor;
 
     @Bean
     public TranslateStrategyHandler translateHandler() {
         List<AbstractTranslateProcessor> processors = new ArrayList<>();
-        processors.add(simpleProcessor);
-        processors.add(customizeProcessor);
+        processors.add(simplePluginProcessor);
+        processors.add(methodPluginProcessor);
         return new DefaultTranslateStrategyHandler(processors);
     }
 }

@@ -39,9 +39,9 @@ import java.lang.reflect.Field;
  * @since 0.0.1
  * <p> 2022/1/19 18:59
  */
-public class SimpleProcessor extends AbstractTranslateProcessor {
+public class SimplePluginProcessor extends AbstractTranslateProcessor {
 
-    public SimpleProcessor(String dictType) {
+    public SimplePluginProcessor(String dictType) {
         super(dictType);
     }
 
