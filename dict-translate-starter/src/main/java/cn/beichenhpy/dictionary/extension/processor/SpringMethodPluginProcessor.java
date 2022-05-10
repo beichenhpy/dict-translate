@@ -23,58 +23,76 @@
  *
  */
 
-package cn.beichenhpy.dictionary.processor;
+package cn.beichenhpy.dictionary.extension.processor;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.MethodPlugin;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
+import cn.beichenhpy.dictionary.extension.annotation.SpringMethodPlugin;
+import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
+ * 支持spring bean的方法插件处理器。支持
  *
- * 方法插件处理器，只支持静态方法和构造函数为空的普通方法
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
  * <p> 2022/1/19 19:02
  */
 @Slf4j
-public class MethodPluginProcessor extends AbstractTranslateProcessor {
+public class SpringMethodPluginProcessor extends AbstractTranslateProcessor implements ApplicationContextAware {
 
-    public MethodPluginProcessor(String dictType) {
+    private ApplicationContext applicationContext;
+
+    public SpringMethodPluginProcessor(String dictType) {
         super(dictType);
     }
 
     @Override
     public Object process(Dict dict, Object result, Object keyValue, Field field) {
         String ref = dict.ref();
-        MethodPlugin methodPlugin = field.getAnnotation(MethodPlugin.class);
-        if (methodPlugin == null){
-            log.warn("该field: {},未添加MethodPlugin注解", field.getName());
+        SpringMethodPlugin springMethodPlugin = field.getAnnotation(SpringMethodPlugin.class);
+        if (springMethodPlugin == null) {
+            log.warn("该field: {},未添加SpringMethodPlugin注解", field.getName());
             return result;
         }
-        Class<?> clazz = methodPlugin.type();
-        String methodName = methodPlugin.method();
-        Class<?> parameterType = methodPlugin.arg();
+        Class<?> clazz = springMethodPlugin.type();
+        String methodName = springMethodPlugin.method();
+        Class<?> parameterType = springMethodPlugin.arg();
         Method translateMethod = ReflectUtil.getMethod(clazz, methodName, parameterType);
         if (translateMethod == null) {
             throw new DictionaryTranslateException("字典转换失败：检查传入的[method]是否存在");
         }
-        //判断是否为静态方法
-        int modifiers = translateMethod.getModifiers();
-        boolean isStatic = Modifier.isStatic(modifiers);
-        if (clazz.isEnum() && !isStatic) {
-            throw new DictionaryTranslateException("字典转换失败: 传入type为枚举类时，必须传入静态方法method!");
-        }
         try {
-            Object instance = null;
-            if (!isStatic) {
-                instance = ReflectUtil.newInstance(clazz);
+            String beanName = springMethodPlugin.beanName();
+            Object instance;
+            //通过spring 获取 bean
+            try {
+                if (StrUtil.isNotBlank(beanName)) {
+                    instance = applicationContext.getBean(clazz, beanName);
+                } else {
+                    instance = applicationContext.getBean(clazz);
+                }
+            } catch (BeansException e) {
+                if (e instanceof NoUniqueBeanDefinitionException){
+                    throw new DictionaryTranslateException(clazz.getName() + "该类对应的bean有多个,请设置SpringMethodPlugin的beanName属性");
+                } else if (e instanceof NoSuchBeanDefinitionException){
+                    throw new DictionaryTranslateException("找不到" + clazz.getName() + "该类对应的bean,检查传入的type是否注册为bean");
+                }else {
+                    throw new DictionaryTranslateException("bean创建失败");
+                }
             }
             Object translateValue = ReflectUtil.invoke(instance, translateMethod, keyValue);
             ReflectUtil.setFieldValue(result, ref, translateValue);
@@ -84,4 +102,8 @@ public class MethodPluginProcessor extends AbstractTranslateProcessor {
         return result;
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

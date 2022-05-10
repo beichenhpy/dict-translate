@@ -1,7 +1,7 @@
 package cn.beichenhpy.sample.service;
 
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.enums.TranslateStrategy;
+import cn.beichenhpy.dictionary.constant.TranslateStrategy;
 import cn.beichenhpy.sample.entity.Home;
 import cn.beichenhpy.sample.entity.StatusEnum;
 import cn.beichenhpy.sample.entity.Student;

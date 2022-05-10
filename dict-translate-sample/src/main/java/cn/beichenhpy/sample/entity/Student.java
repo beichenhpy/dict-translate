@@ -2,8 +2,11 @@ package cn.beichenhpy.sample.entity;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.MethodPlugin;
-import cn.beichenhpy.dictionary.enums.DictType;
+import cn.beichenhpy.dictionary.constant.DictType;
+import cn.beichenhpy.dictionary.extension.annotation.SpringMethodPlugin;
+import cn.beichenhpy.dictionary.extension.constant.SpringDictType;
 import cn.beichenhpy.sample.service.FooService;
+import cn.beichenhpy.sample.service.FooUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -26,14 +29,14 @@ public class Student {
 
     private String genderDict;
 
-    @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict")
+    @Dict(dictType = DictType.METHOD, ref = "statusDict")
     @MethodPlugin(type = StatusEnum.class, method = "getValue", arg = Long.class)
     private Long status;
 
     private String statusDict;
 
-    @Dict(dictType = DictType.CUSTOMIZE, ref = "healthText")
-    @MethodPlugin(type = FooService.class, method = "getValue", arg = String.class)
+    @Dict(dictType = SpringDictType.SPRING_METHOD, ref = "healthText")
+    @SpringMethodPlugin(type = FooUtil.class, method = "getValue", arg = String.class)
     private String health;
 
     private String healthText;

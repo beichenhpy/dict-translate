@@ -36,7 +36,7 @@ package cn.beichenhpy.dictionary;
 public interface TranslateStrategyHandler {
     /**
      * 字典翻译,需要实现DictType类型的翻译
-     * @see cn.beichenhpy.dictionary.enums.DictType
+     * @see cn.beichenhpy.dictionary.constant.DictType
      * @param resultWrapper 结果包装类
      */
     Object dictTranslate(ResultWrapper resultWrapper) throws Throwable;

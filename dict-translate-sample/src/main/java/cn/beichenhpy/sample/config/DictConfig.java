@@ -2,6 +2,7 @@ package cn.beichenhpy.sample.config;
 
 import cn.beichenhpy.dictionary.DefaultTranslateStrategyHandler;
 import cn.beichenhpy.dictionary.TranslateStrategyHandler;
+import cn.beichenhpy.dictionary.extension.processor.SpringMethodPluginProcessor;
 import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.MethodPluginProcessor;
 import cn.beichenhpy.dictionary.processor.SimplePluginProcessor;
@@ -26,11 +27,18 @@ public class DictConfig {
     @Resource
     private MethodPluginProcessor methodPluginProcessor;
 
+    @Resource
+    private SpringMethodPluginProcessor springMethodPluginProcessor;
+
     @Bean
     public TranslateStrategyHandler translateHandler() {
         List<AbstractTranslateProcessor> processors = new ArrayList<>();
+        //简单的转换
         processors.add(simplePluginProcessor);
+        //无构造函数类的普通方法或静态方法处理
         processors.add(methodPluginProcessor);
+        //spring bean的方法处理
+        processors.add(springMethodPluginProcessor);
         return new DefaultTranslateStrategyHandler(processors);
     }
 }

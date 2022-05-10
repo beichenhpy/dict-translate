@@ -2,7 +2,7 @@ package cn.beichenhpy.sample.entity;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
-import cn.beichenhpy.dictionary.enums.DictType;
+import cn.beichenhpy.dictionary.constant.DictType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

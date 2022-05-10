@@ -23,7 +23,7 @@
  *
  */
 
-package cn.beichenhpy.dictionary.enums;
+package cn.beichenhpy.dictionary.constant;
 
 import cn.beichenhpy.dictionary.annotation.plugin.MethodPlugin;
 
@@ -45,10 +45,6 @@ public interface DictType {
      * 自定义类型，通过自定义方法查询key所对应的value值
      * @see MethodPlugin
      */
-    String CUSTOMIZE = "CUSTOMIZE";
+    String METHOD = "METHOD";
 
-    /**
-     * 数据库类型
-     */
-    String DATABASE = "DATABASE";
 }

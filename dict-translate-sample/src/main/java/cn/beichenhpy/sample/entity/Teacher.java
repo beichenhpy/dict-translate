@@ -3,7 +3,7 @@ package cn.beichenhpy.sample.entity;
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.plugin.MethodPlugin;
 import cn.beichenhpy.dictionary.annotation.plugin.SimplePlugin;
-import cn.beichenhpy.dictionary.enums.DictType;
+import cn.beichenhpy.dictionary.constant.DictType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -25,7 +25,7 @@ public class Teacher {
 
     private String genderDict;
 
-    @Dict(dictType = DictType.CUSTOMIZE, ref = "statusDict")
+    @Dict(dictType = DictType.METHOD, ref = "statusDict")
     @MethodPlugin(type = StatusEnum.class, method = "getValue", arg = Long.class)
     private Long status;
 

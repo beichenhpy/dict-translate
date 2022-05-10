@@ -27,7 +27,7 @@ package cn.beichenhpy.dictionary;
 
 import cn.beichenhpy.dictionary.annotation.Dict;
 import cn.beichenhpy.dictionary.annotation.EnableDictTranslate;
-import cn.beichenhpy.dictionary.enums.TranslateStrategy;
+import cn.beichenhpy.dictionary.constant.TranslateStrategy;
 import cn.beichenhpy.dictionary.exception.DictionaryTranslateException;
 import cn.beichenhpy.dictionary.processor.AbstractTranslateProcessor;
 import cn.beichenhpy.dictionary.processor.MethodPluginProcessor;

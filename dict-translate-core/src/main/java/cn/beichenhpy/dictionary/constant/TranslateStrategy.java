@@ -23,24 +23,21 @@
  *
  */
 
-package cn.beichenhpy.dictionary.enums;
+package cn.beichenhpy.dictionary.constant;
+
+
+import cn.beichenhpy.dictionary.annotation.Dict;
+import cn.beichenhpy.dictionary.DefaultTranslateStrategyHandler;
 
 /**
- * 翻译用常量
- *
+ * 字典翻译策略，默认DEFAULT为递归对{@linkplain Dict#ref()}赋值
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 18:51
+ * @see DefaultTranslateStrategyHandler
+ * <p> 2022/1/14 08:55
  */
-public interface TranslateConstant {
+public interface TranslateStrategy {
 
-    String YES = "是";
-    String NO = "否";
-    String ONE = "1";
-    String ZERO = "0";
-    String LOWER_TRUE = "true";
-    String UPPER_TRUE = "TRUE";
-    String LOWER_FALSE = "false";
-    String UPPER_FALSE = "FALSE";
+    String DEFAULT = "DEFAULT";
 }

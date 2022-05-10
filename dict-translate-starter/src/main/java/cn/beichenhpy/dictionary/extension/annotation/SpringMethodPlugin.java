@@ -23,45 +23,49 @@
  *
  */
 
-package cn.beichenhpy.dictionary.annotation;
+package cn.beichenhpy.dictionary.extension.annotation;
 
-import cn.beichenhpy.dictionary.constant.TranslateStrategy;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
- * 在哪个方法启用翻译
- * <pre>
- *     <t>@EnableDictTranslate</t>(type = TranslateType.ENTITY)
- *     public IPage&lt;Student&gt; test() {
- *         IPage&lt;Student&gt; page = new Page<>();
- *         page.setRecords(prepare());
- *         return page;
- *     }
- * </pre>
+ * 字典类型为CUSTOMIZE类型时所用的注解插件
+ * <p>主要提供对应翻译key to value的类、方法、方法参数类型
  * @author beichenhpy
  * @version 0.0.1
  * @since 0.0.1
- * <p> 2022/1/14 08:57
+ * <p> 2022/1/14 09:27
  */
-@Target(ElementType.METHOD)
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnableDictTranslate {
-
+@Target(ElementType.FIELD)
+public @interface SpringMethodPlugin {
     /**
-     * DEFAULT 对已经有的字段赋值
      *
-     * @return 翻译策略
+     * Object不处理
+     *
+     * @return 返回方法所在类
      */
-    String strategy() default TranslateStrategy.DEFAULT;
+    Class<?> type();
 
     /**
-     * 忽略翻译类，用于抑制警告
-     * @return 返回不需要翻译的类数组
+     *
+     * 对应获取value值的方法
+     *
+     * @return 返回方法名
      */
-    Class<?>[] ignore() default {};
+    String method();
 
+    /**
+     *
+     *
+     * @return 枚举方法的参数类型
+     */
+    Class<?> arg();
+
+    /**
+     * Spring bean名称
+     * 默认通过class获取bean，出现异常则需要添加beanName获取
+     * @return bean名称
+     */
+    String beanName() default "";
 }
