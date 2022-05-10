@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 自动配置文件，只提供默认的两个处理器和切面配置，需要按需引入processor
+ * 自动配置文件，只提供默认的三个处理器和切面配置，需要按需引入processor
  *
  * @author beichenhpy
  * @version 0.0.1
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class DictTranslateHandlerConfig {
 
     @Bean
-    public SimplePluginProcessor simpleProcessor() {
+    public SimplePluginProcessor simplePluginProcessor() {
         return new SimplePluginProcessor(SpringDictType.SIMPLE);
     }
 
